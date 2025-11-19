@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "targets": [
+      "dr_tracker_function"
+    ],
+    "ignore": [],
+    "source": "functions"
+  },
+  "client": {
+    "source": "drtrackerui",
+    "plugin": "zcatalyst-cli-plugin-react"
+  }
+}

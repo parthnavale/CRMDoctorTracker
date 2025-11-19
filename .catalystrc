@@ -1,0 +1,30 @@
+{
+  "defaults": {
+    "project": 1,
+    "env": 1
+  },
+  "actives": {
+    "project": 1,
+    "env": 1
+  },
+  "projects": [
+    {
+      "idx": 1,
+      "id": "22464000000011234",
+      "name": "DRTracker",
+      "domain": {
+        "id": "50035051186",
+        "name": "drtracker-60055619041.development"
+      },
+      "timezone": "Asia/Kolkata",
+      "env": [
+        {
+          "idx": 1,
+          "id": "60055619041",
+          "name": "Development",
+          "type": 3
+        }
+      ]
+    }
+  ]
+}
