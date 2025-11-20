@@ -231,56 +231,50 @@ def _delete_patient(request: Request, app):
 
 
 def _create_prescription(request: Request, app):
+    """Create a new prescription with UUID as primary identifier."""
     req_data = request.get_json(silent=True) or {}
-    frequency = req_data.get('Frequency')
-    duration = req_data.get('Duration')
-    special = req_data.get('SpecialInstruction')
-    symptoms = req_data.get('CurrentSymptoms')
-    patient_id = req_data.get('PatientId')
+    patient_uuid = req_data.get('PatientUUID')
+    outside_medicines = req_data.get('OutsideMedicines')
+    current_symptoms = req_data.get('CurrentSymptoms')
+    fees = req_data.get('fees')
 
-    # PatientId is required and must be unique (acts as primary key)
-    if patient_id is None:
-        return make_response(jsonify({'status': 'failure', 'error': 'Missing required field: PatientId'}), 400)
+    # PatientUUID is required
+    if not patient_uuid:
+        return make_response(jsonify({'status': 'failure', 'error': 'Missing required field: PatientUUID'}), 400)
 
-    # Convert numeric fields
-    try:
-        frequency = int(frequency) if frequency is not None and str(frequency) != '' else None
-    except Exception:
-        frequency = None
-    try:
-        duration = int(duration) if duration is not None and str(duration) != '' else None
-    except Exception:
-        duration = None
-
-    # Ensure Patient exists (foreign key). PatientId is the PK of Patient table.
+    # Verify Patient exists by UUID
     try:
         zcql = app.zcql()
-        safe_pid = str(patient_id).replace("'", "\\'")
-        # Accept PatientId that matches either Patient.PatientId or Patient.Phonenumber
-        patient_exists = zcql.execute_query(f"SELECT ROWID FROM Patient WHERE PatientId = '{safe_pid}' OR Phonenumber = '{safe_pid}'")
-        # If not found, return 400
+        safe_uuid = str(patient_uuid).replace("'", "\\'")
+        patient_exists = zcql.execute_query(f"SELECT ROWID FROM Patient WHERE UUID = '{safe_uuid}'")
         if not patient_exists:
             return make_response(jsonify({'status': 'failure', 'error': 'Referenced Patient not found'}), 400)
     except Exception:
         logger.exception('Failed to verify referenced Patient')
+        return make_response(jsonify({'status': 'failure', 'error': 'Failed to verify patient'}), 500)
 
-    # Uniqueness check removed to allow multiple prescriptions per PatientId
+    # Generate UUID for prescription
+    prescription_uuid = generate_uuid()
 
     table = app.datastore().table('Prescription')
-    row = table.insert_row({
-        'Frequency': frequency,
-        'Duration': duration,
-        'SpecialInstruction': special,
-        'CurrentSymptoms': symptoms,
-        'PatientId': patient_id
-    })
+    try:
+        row = table.insert_row({
+            'UUID': prescription_uuid,
+            'PatientUUID': patient_uuid,
+            'OutsideMedicines': outside_medicines,
+            'CurrentSymptoms': current_symptoms,
+            'fees': fees
+        })
 
-    # Prescription uses PatientId as its primary identifier; return that as the prescription id.
-    resp = {'status': 'success', 'data': {'prescriptionId': patient_id}}
-    return make_response(jsonify(resp), 200)
+        resp = {'status': 'success', 'data': {'UUID': prescription_uuid}}
+        return make_response(jsonify(resp), 200)
+    except Exception:
+        logger.exception('Failed to create Prescription')
+        return make_response(jsonify({'status': 'failure', 'error': 'Failed to create prescription'}), 500)
 
 
 def _list_prescriptions(request: Request, app):
+    """Get all prescriptions."""
     page = request.args.get('page')
     per_page = request.args.get('perPage')
     try:
@@ -321,7 +315,7 @@ def _list_prescriptions(request: Request, app):
 
     try:
         offset = (page - 1) * per_page
-        query_result = zcql_service.execute_query(f"SELECT ROWID, Frequency, Duration, SpecialInstruction, CurrentSymptoms, PatientId FROM Prescription LIMIT {offset},{per_page}")
+        query_result = zcql_service.execute_query(f"SELECT ROWID, UUID, PatientUUID, OutsideMedicines, CurrentSymptoms, fees, CREATEDTIME FROM Prescription LIMIT {offset},{per_page}")
         items = []
         for item in query_result:
             if isinstance(item, dict) and len(item) == 1 and list(item.keys())[0] == 'Prescription':
@@ -329,12 +323,13 @@ def _list_prescriptions(request: Request, app):
             else:
                 row = item
             items.append({
-                'id': row.get('ROWID') or row.get('id') or row.get('Id'),
-                'Frequency': row.get('Frequency'),
-                'Duration': row.get('Duration'),
-                'SpecialInstruction': row.get('SpecialInstruction'),
+                'ROWID': row.get('ROWID') or row.get('id') or row.get('Id'),
+                'UUID': row.get('UUID'),
+                'PatientUUID': row.get('PatientUUID'),
+                'OutsideMedicines': row.get('OutsideMedicines'),
                 'CurrentSymptoms': row.get('CurrentSymptoms'),
-                'PatientId': row.get('PatientId')
+                'fees': row.get('fees'),
+                'CREATEDTIME': row.get('CREATEDTIME')
             })
 
         resp = {'status': 'success', 'data': {'prescriptions': items, 'hasMore': has_more, 'page': page, 'perPage': per_page, 'total': total}}
@@ -344,15 +339,14 @@ def _list_prescriptions(request: Request, app):
         return make_response(jsonify({'status': 'failure', 'error': 'Failed to fetch prescriptions'}), 500)
 
 
-def _get_prescription_by_patient(request: Request, app):
-    # Fetch by PatientId only. PatientId is the primary key for Prescription.
-    pid = request.args.get('PatientId') or request.args.get('patientId') or request.args.get('Patient')
-    if not pid:
-        return make_response(jsonify({'status': 'failure', 'error': 'Missing PatientId query parameter'}), 400)
+def _get_prescription_by_uuid(request: Request, app, uuid):
+    """Get a single prescription by UUID."""
+    if not uuid:
+        return make_response(jsonify({'status': 'failure', 'error': 'Missing UUID parameter'}), 400)
     try:
         zcql = app.zcql()
-        safe_pid = str(pid).replace("'", "\\'")
-        query_result = zcql.execute_query(f"SELECT * FROM Prescription WHERE PatientId = '{safe_pid}'")
+        safe_uuid = str(uuid).replace("'", "\\'")
+        query_result = zcql.execute_query(f"SELECT * FROM Prescription WHERE UUID = '{safe_uuid}'")
         if query_result:
             item = query_result[0]
             if isinstance(item, dict) and len(item) == 1 and list(item.keys())[0] == 'Prescription':
@@ -364,19 +358,20 @@ def _get_prescription_by_patient(request: Request, app):
             resp = {'status': 'success', 'data': {'prescription': None}}
         return make_response(jsonify(resp), 200)
     except Exception:
-        logger.exception('Failed to query Prescription by PatientId')
+        logger.exception('Failed to query Prescription by UUID')
         return make_response(jsonify({'status': 'failure', 'error': 'Failed to fetch prescription'}), 500)
 
 
-def _delete_prescription(request: Request, app):
-    pid = request.args.get('PatientId') or request.args.get('patientId') or request.args.get('Patient')
-    if not pid:
-        return make_response(jsonify({'status': 'failure', 'error': 'Missing PatientId query parameter'}), 400)
+def _delete_prescription(request: Request, app, uuid):
+    """Delete prescription by UUID and cascade delete all linked PrescribedMedicine entries."""
+    if not uuid:
+        return make_response(jsonify({'status': 'failure', 'error': 'Missing UUID parameter'}), 400)
     try:
-        # Find the prescription by PatientId and delete it. Prescription uses PatientId as primary key.
         zcql = app.zcql()
-        safe_pid = str(pid).replace("'", "\\'")
-        rows = zcql.execute_query(f"SELECT ROWID FROM Prescription WHERE PatientId = '{safe_pid}'")
+        safe_uuid = str(uuid).replace("'", "\\'")
+        
+        # Find the prescription ROWID
+        rows = zcql.execute_query(f"SELECT ROWID FROM Prescription WHERE UUID = '{safe_uuid}'")
         row_ids = []
         for r in rows or []:
             if isinstance(r, dict) and len(r) == 1 and list(r.keys())[0] == 'Prescription':
@@ -386,8 +381,31 @@ def _delete_prescription(request: Request, app):
                 rid = r.get('ROWID') if isinstance(r, dict) else None
             if rid:
                 row_ids.append(rid)
+        
         if not row_ids:
-            return make_response(jsonify({'status': 'failure', 'error': 'No prescription found for that PatientId'}), 404)
+            return make_response(jsonify({'status': 'failure', 'error': 'No prescription found with that UUID'}), 404)
+        
+        # Cascade delete: First delete all PrescribedMedicine entries linked to this prescription
+        try:
+            prescribed_meds = zcql.execute_query(f"SELECT ROWID FROM PrescribedMedicine WHERE PrescriptionUUID = '{safe_uuid}'")
+            prescribed_med_table = app.datastore().table('PrescribedMedicine')
+            deleted_meds = []
+            for pm in prescribed_meds or []:
+                if isinstance(pm, dict) and len(pm) == 1 and list(pm.keys())[0] == 'PrescribedMedicine':
+                    inner = list(pm.values())[0]
+                    pm_rid = inner.get('ROWID') or inner.get('id') or inner.get('Id')
+                else:
+                    pm_rid = pm.get('ROWID') if isinstance(pm, dict) else None
+                if pm_rid:
+                    try:
+                        prescribed_med_table.delete_row(pm_rid)
+                        deleted_meds.append(pm_rid)
+                    except Exception:
+                        logger.exception('Failed to delete PrescribedMedicine %s', pm_rid)
+        except Exception:
+            logger.exception('Failed to cascade delete PrescribedMedicine entries')
+        
+        # Now delete the prescription itself
         datastore_service = app.datastore()
         table_service = datastore_service.table('Prescription')
         deleted = []
@@ -397,10 +415,11 @@ def _delete_prescription(request: Request, app):
                 deleted.append(rid)
             except Exception:
                 logger.exception('Failed to delete prescription %s', rid)
+        
         return make_response(jsonify({'status': 'success', 'data': {'deletedRowIds': deleted}}), 200)
     except Exception:
-        logger.exception('Failed to delete Prescription by PatientId')
-        return make_response(jsonify({'status': 'failure', 'error': 'Failed to delete prescription(s)'}), 500)
+        logger.exception('Failed to delete Prescription by UUID')
+        return make_response(jsonify({'status': 'failure', 'error': 'Failed to delete prescription'}), 500)
 
 
 def _update_patient(request: Request, app):
@@ -473,36 +492,25 @@ def _update_patient(request: Request, app):
         return make_response(jsonify({'status': 'failure', 'error': 'Failed to update patient'}), 500)
 
 
-def _update_prescription(request: Request, app):
-    """Update prescription fields by PatientId. Requires 'PatientId' in JSON body."""
+def _update_prescription(request: Request, app, uuid):
+    """Update prescription fields by UUID."""
     req_data = request.get_json(silent=True) or {}
-    patient_id = req_data.get('PatientId') or req_data.get('patientId')
-    if not patient_id:
-        return make_response(jsonify({'status': 'failure', 'error': 'Missing required field: PatientId'}), 400)
+    
+    if not uuid:
+        return make_response(jsonify({'status': 'failure', 'error': 'Missing UUID parameter'}), 400)
 
     updates = {}
-    for key in ('Frequency', 'Duration', 'SpecialInstruction', 'CurrentSymptoms'):
+    for key in ('PatientUUID', 'OutsideMedicines', 'CurrentSymptoms', 'fees'):
         if key in req_data:
             updates[key] = req_data.get(key)
-
-    if 'Frequency' in updates:
-        try:
-            updates['Frequency'] = int(updates['Frequency']) if updates['Frequency'] is not None and str(updates['Frequency']) != '' else None
-        except Exception:
-            updates.pop('Frequency', None)
-    if 'Duration' in updates:
-        try:
-            updates['Duration'] = int(updates['Duration']) if updates['Duration'] is not None and str(updates['Duration']) != '' else None
-        except Exception:
-            updates.pop('Duration', None)
 
     if not updates:
         return make_response(jsonify({'status': 'failure', 'error': 'No updatable fields provided'}), 400)
 
     try:
         zcql = app.zcql()
-        safe_pid = str(patient_id).replace("'", "\\'")
-        rows = zcql.execute_query(f"SELECT ROWID FROM Prescription WHERE PatientId = '{safe_pid}'")
+        safe_uuid = str(uuid).replace("'", "\\'")
+        rows = zcql.execute_query(f"SELECT ROWID FROM Prescription WHERE UUID = '{safe_uuid}'")
         row_id = None
         if rows:
             first = rows[0]
@@ -512,7 +520,7 @@ def _update_prescription(request: Request, app):
             else:
                 row_id = first.get('ROWID') if isinstance(first, dict) else None
         if not row_id:
-            return make_response(jsonify({'status': 'failure', 'error': 'Prescription not found for PatientId'}), 404)
+            return make_response(jsonify({'status': 'failure', 'error': 'Prescription not found for UUID'}), 404)
 
         table = app.datastore().table('Prescription')
         try:
@@ -529,7 +537,7 @@ def _update_prescription(request: Request, app):
                     set_clauses.append(f"{k}='{safe_v}'")
             zcql.execute_query(f"UPDATE Prescription SET {', '.join(set_clauses)} WHERE ROWID = '{row_id}'")
 
-        return make_response(jsonify({'status': 'success', 'data': {'prescriptionId': patient_id}}), 200)
+        return make_response(jsonify({'status': 'success', 'data': {'UUID': uuid}}), 200)
     except Exception:
         logger.exception('Failed to update Prescription')
         return make_response(jsonify({'status': 'failure', 'error': 'Failed to update prescription'}), 500)
@@ -587,6 +595,378 @@ def _create_medicine(request: Request, app):
         row_id = row.get('ROWID') or row.get('id') or row.get('Id') or row.get('ROW_ID')
     medicine = {'medicineId': row_id or name, 'Name': name}
     return make_response(jsonify({'status': 'success', 'data': {'medicine': medicine}}), 200)
+
+
+def _create_prescribed_medicine(request: Request, app):
+    """Create a new PrescribedMedicine entry."""
+    req_data = request.get_json(silent=True) or {}
+    prescription_uuid = req_data.get('PrescriptionUUID')
+    medicine_name = req_data.get('MedicineName')
+    frequency = req_data.get('frequency')
+    duration = req_data.get('Duration')
+    timing = req_data.get('timing')
+
+    # PrescriptionUUID is required
+    if not prescription_uuid:
+        return make_response(jsonify({'status': 'failure', 'error': 'Missing required field: PrescriptionUUID'}), 400)
+
+    # Verify Prescription exists by UUID
+    try:
+        zcql = app.zcql()
+        safe_uuid = str(prescription_uuid).replace("'", "\\'")
+        prescription_exists = zcql.execute_query(f"SELECT ROWID FROM Prescription WHERE UUID = '{safe_uuid}'")
+        if not prescription_exists:
+            return make_response(jsonify({'status': 'failure', 'error': 'Referenced Prescription not found'}), 400)
+    except Exception:
+        logger.exception('Failed to verify referenced Prescription')
+        return make_response(jsonify({'status': 'failure', 'error': 'Failed to verify prescription'}), 500)
+
+    table = app.datastore().table('PrescribedMedicine')
+    try:
+        row = table.insert_row({
+            'PrescriptionUUID': prescription_uuid,
+            'MedicineName': medicine_name,
+            'frequency': frequency,
+            'Duration': duration,
+            'timing': timing
+        })
+
+        row_id = None
+        if isinstance(row, dict):
+            row_id = row.get('ROWID') or row.get('id') or row.get('Id') or row.get('ROW_ID')
+        
+        resp = {'status': 'success', 'data': {'ROWID': row_id, 'PrescriptionUUID': prescription_uuid}}
+        return make_response(jsonify(resp), 200)
+    except Exception:
+        logger.exception('Failed to create PrescribedMedicine')
+        return make_response(jsonify({'status': 'failure', 'error': 'Failed to create prescribed medicine'}), 500)
+
+
+def _get_prescribed_medicines_by_prescription(request: Request, app, prescription_uuid):
+    """Get all PrescribedMedicine entries for a prescription by PrescriptionUUID."""
+    if not prescription_uuid:
+        return make_response(jsonify({'status': 'failure', 'error': 'Missing PrescriptionUUID parameter'}), 400)
+    
+    try:
+        zcql = app.zcql()
+        safe_uuid = str(prescription_uuid).replace("'", "\\'")
+        query_result = zcql.execute_query(f"SELECT * FROM PrescribedMedicine WHERE PrescriptionUUID = '{safe_uuid}'")
+        
+        items = []
+        for item in query_result or []:
+            if isinstance(item, dict) and len(item) == 1 and list(item.keys())[0] == 'PrescribedMedicine':
+                row = list(item.values())[0]
+            else:
+                row = item
+            items.append({
+                'ROWID': row.get('ROWID') or row.get('id') or row.get('Id'),
+                'PrescriptionUUID': row.get('PrescriptionUUID'),
+                'MedicineName': row.get('MedicineName'),
+                'frequency': row.get('frequency'),
+                'Duration': row.get('Duration'),
+                'timing': row.get('timing'),
+                'CREATEDTIME': row.get('CREATEDTIME')
+            })
+        
+        resp = {'status': 'success', 'data': {'prescribedMedicines': items}}
+        return make_response(jsonify(resp), 200)
+    except Exception:
+        logger.exception('Failed to query PrescribedMedicine by PrescriptionUUID')
+        return make_response(jsonify({'status': 'failure', 'error': 'Failed to fetch prescribed medicines'}), 500)
+
+
+def _get_prescribed_medicine_by_rowid(request: Request, app, rowid):
+    """Get a single PrescribedMedicine entry by ROWID."""
+    if not rowid:
+        return make_response(jsonify({'status': 'failure', 'error': 'Missing ROWID parameter'}), 400)
+    
+    try:
+        zcql = app.zcql()
+        safe_rowid = str(rowid).replace("'", "\\'")
+        query_result = zcql.execute_query(f"SELECT * FROM PrescribedMedicine WHERE ROWID = '{safe_rowid}'")
+        
+        if query_result:
+            item = query_result[0]
+            if isinstance(item, dict) and len(item) == 1 and list(item.keys())[0] == 'PrescribedMedicine':
+                row = list(item.values())[0]
+            else:
+                row = item
+            resp = {'status': 'success', 'data': {'prescribedMedicine': row}}
+        else:
+            resp = {'status': 'success', 'data': {'prescribedMedicine': None}}
+        return make_response(jsonify(resp), 200)
+    except Exception:
+        logger.exception('Failed to query PrescribedMedicine by ROWID')
+        return make_response(jsonify({'status': 'failure', 'error': 'Failed to fetch prescribed medicine'}), 500)
+
+
+def _update_prescribed_medicine(request: Request, app, rowid):
+    """Update a PrescribedMedicine entry by ROWID."""
+    req_data = request.get_json(silent=True) or {}
+    
+    if not rowid:
+        return make_response(jsonify({'status': 'failure', 'error': 'Missing ROWID parameter'}), 400)
+
+    updates = {}
+    for key in ('MedicineName', 'frequency', 'Duration', 'timing'):
+        if key in req_data:
+            updates[key] = req_data.get(key)
+
+    if not updates:
+        return make_response(jsonify({'status': 'failure', 'error': 'No updatable fields provided'}), 400)
+
+    try:
+        table = app.datastore().table('PrescribedMedicine')
+        try:
+            table.update_row(rowid, updates)
+        except Exception:
+            zcql = app.zcql()
+            set_clauses = []
+            for k, v in updates.items():
+                if v is None:
+                    set_clauses.append(f"{k}=NULL")
+                elif isinstance(v, (int, float)):
+                    set_clauses.append(f"{k}={v}")
+                else:
+                    safe_v = str(v).replace("'", "\\'")
+                    set_clauses.append(f"{k}='{safe_v}'")
+            safe_rowid = str(rowid).replace("'", "\\'")
+            zcql.execute_query(f"UPDATE PrescribedMedicine SET {', '.join(set_clauses)} WHERE ROWID = '{safe_rowid}'")
+
+        return make_response(jsonify({'status': 'success', 'data': {'ROWID': rowid}}), 200)
+    except Exception:
+        logger.exception('Failed to update PrescribedMedicine')
+        return make_response(jsonify({'status': 'failure', 'error': 'Failed to update prescribed medicine'}), 500)
+
+
+def _delete_prescribed_medicine(request: Request, app, rowid):
+    """Delete a PrescribedMedicine entry by ROWID."""
+    if not rowid:
+        return make_response(jsonify({'status': 'failure', 'error': 'Missing ROWID parameter'}), 400)
+    
+    try:
+        datastore_service = app.datastore()
+        table_service = datastore_service.table('PrescribedMedicine')
+        
+        table_service.delete_row(rowid)
+        
+        return make_response(jsonify({'status': 'success', 'data': {'deletedRowId': rowid}}), 200)
+    except Exception:
+        logger.exception('Failed to delete PrescribedMedicine by ROWID')
+        return make_response(jsonify({'status': 'failure', 'error': 'Failed to delete prescribed medicine'}), 500)
+
+
+def _save_prescription_atomic(request: Request, app):
+    """Atomically save a prescription with its medicines (CREATE or UPDATE)."""
+    req_data = request.get_json(silent=True) or {}
+    prescription_uuid = req_data.get('UUID')
+    patient_uuid = req_data.get('PatientUUID')
+    outside_medicines = req_data.get('OutsideMedicines')
+    current_symptoms = req_data.get('CurrentSymptoms')
+    fees = req_data.get('fees')
+    medicines = req_data.get('medicines', [])
+    deleted_medicine_rowids = req_data.get('deletedMedicineRowIds', [])
+
+    # Validation
+    if not patient_uuid:
+        return make_response(jsonify({'status': 'failure', 'error': 'Missing required field: PatientUUID'}), 400)
+    
+    if not isinstance(medicines, list):
+        return make_response(jsonify({'status': 'failure', 'error': 'medicines must be an array'}), 400)
+
+    # Verify Patient exists by UUID
+    try:
+        zcql = app.zcql()
+        safe_patient_uuid = str(patient_uuid).replace("'", "\\'")
+        patient_exists = zcql.execute_query(f"SELECT ROWID FROM Patient WHERE UUID = '{safe_patient_uuid}'")
+        if not patient_exists:
+            return make_response(jsonify({'status': 'failure', 'error': 'Referenced Patient not found'}), 400)
+    except Exception:
+        logger.exception('Failed to verify referenced Patient')
+        return make_response(jsonify({'status': 'failure', 'error': 'Failed to verify patient'}), 500)
+
+    is_update = prescription_uuid is not None and prescription_uuid != ''
+    created_prescription_uuid = None
+    created_medicine_rowids = []
+    prescription_table = app.datastore().table('Prescription')
+    medicine_table = app.datastore().table('PrescribedMedicine')
+
+    try:
+        # Step 1: CREATE or UPDATE Prescription
+        if is_update:
+            # UPDATE mode
+            safe_uuid = str(prescription_uuid).replace("'", "\\'")
+            rows = zcql.execute_query(f"SELECT ROWID FROM Prescription WHERE UUID = '{safe_uuid}'")
+            prescription_rowid = None
+            if rows:
+                first = rows[0]
+                if isinstance(first, dict) and len(first) == 1 and list(first.keys())[0] == 'Prescription':
+                    inner = list(first.values())[0]
+                    prescription_rowid = inner.get('ROWID') or inner.get('id') or inner.get('Id')
+                else:
+                    prescription_rowid = first.get('ROWID') if isinstance(first, dict) else None
+            
+            if not prescription_rowid:
+                return make_response(jsonify({'status': 'failure', 'error': 'Prescription not found for UUID'}), 404)
+            
+            # Update prescription fields
+            updates = {
+                'PatientUUID': patient_uuid,
+                'OutsideMedicines': outside_medicines,
+                'CurrentSymptoms': current_symptoms,
+                'fees': fees
+            }
+            try:
+                prescription_table.update_row(prescription_rowid, updates)
+            except Exception:
+                set_clauses = []
+                for k, v in updates.items():
+                    if v is None:
+                        set_clauses.append(f"{k}=NULL")
+                    elif isinstance(v, (int, float)):
+                        set_clauses.append(f"{k}={v}")
+                    else:
+                        safe_v = str(v).replace("'", "\\'")
+                        set_clauses.append(f"{k}='{safe_v}'")
+                zcql.execute_query(f"UPDATE Prescription SET {', '.join(set_clauses)} WHERE ROWID = '{prescription_rowid}'")
+            
+            created_prescription_uuid = prescription_uuid
+        else:
+            # CREATE mode
+            created_prescription_uuid = generate_uuid()
+            row = prescription_table.insert_row({
+                'UUID': created_prescription_uuid,
+                'PatientUUID': patient_uuid,
+                'OutsideMedicines': outside_medicines,
+                'CurrentSymptoms': current_symptoms,
+                'fees': fees
+            })
+
+        # Step 2: Delete removed medicines (if provided in UPDATE mode)
+        if is_update and deleted_medicine_rowids:
+            for rowid in deleted_medicine_rowids:
+                try:
+                    medicine_table.delete_row(rowid)
+                except Exception:
+                    logger.exception('Failed to delete medicine ROWID %s during atomic save', rowid)
+                    # Continue with other deletions
+
+        # Step 3: INSERT or UPDATE medicines
+        saved_medicines = []
+        for med in medicines:
+            med_rowid = med.get('ROWID')
+            medicine_name = med.get('MedicineName')
+            frequency = med.get('frequency')
+            duration = med.get('Duration')
+            timing = med.get('timing')
+
+            if med_rowid:
+                # UPDATE existing medicine
+                med_updates = {
+                    'MedicineName': medicine_name,
+                    'frequency': frequency,
+                    'Duration': duration,
+                    'timing': timing
+                }
+                try:
+                    medicine_table.update_row(med_rowid, med_updates)
+                    saved_medicines.append({
+                        'ROWID': med_rowid,
+                        'MedicineName': medicine_name,
+                        'frequency': frequency,
+                        'Duration': duration,
+                        'timing': timing
+                    })
+                except Exception:
+                    # Fallback to ZCQL
+                    set_clauses = []
+                    for k, v in med_updates.items():
+                        if v is None:
+                            set_clauses.append(f"{k}=NULL")
+                        elif isinstance(v, (int, float)):
+                            set_clauses.append(f"{k}={v}")
+                        else:
+                            safe_v = str(v).replace("'", "\\'")
+                            set_clauses.append(f"{k}='{safe_v}'")
+                    safe_rowid = str(med_rowid).replace("'", "\\'")
+                    zcql.execute_query(f"UPDATE PrescribedMedicine SET {', '.join(set_clauses)} WHERE ROWID = '{safe_rowid}'")
+                    saved_medicines.append({
+                        'ROWID': med_rowid,
+                        'MedicineName': medicine_name,
+                        'frequency': frequency,
+                        'Duration': duration,
+                        'timing': timing
+                    })
+            else:
+                # INSERT new medicine
+                row = medicine_table.insert_row({
+                    'PrescriptionUUID': created_prescription_uuid,
+                    'MedicineName': medicine_name,
+                    'frequency': frequency,
+                    'Duration': duration,
+                    'timing': timing
+                })
+                
+                new_rowid = None
+                if isinstance(row, dict):
+                    new_rowid = row.get('ROWID') or row.get('id') or row.get('Id') or row.get('ROW_ID')
+                
+                created_medicine_rowids.append(new_rowid)
+                saved_medicines.append({
+                    'ROWID': new_rowid,
+                    'MedicineName': medicine_name,
+                    'frequency': frequency,
+                    'Duration': duration,
+                    'timing': timing
+                })
+
+        # Success response
+        return make_response(jsonify({
+            'status': 'success',
+            'data': {
+                'UUID': created_prescription_uuid,
+                'PatientUUID': patient_uuid,
+                'OutsideMedicines': outside_medicines,
+                'CurrentSymptoms': current_symptoms,
+                'fees': fees,
+                'medicines': saved_medicines
+            }
+        }), 200)
+
+    except Exception as e:
+        logger.exception('Failed to save prescription atomically')
+        
+        # Rollback logic for CREATE mode
+        if not is_update and created_prescription_uuid:
+            try:
+                # Delete created medicines
+                for rowid in created_medicine_rowids:
+                    if rowid:
+                        try:
+                            medicine_table.delete_row(rowid)
+                        except Exception:
+                            logger.exception('Failed to rollback medicine ROWID %s', rowid)
+                
+                # Delete created prescription
+                safe_uuid = str(created_prescription_uuid).replace("'", "\\'")
+                prescription_rows = zcql.execute_query(f"SELECT ROWID FROM Prescription WHERE UUID = '{safe_uuid}'")
+                if prescription_rows:
+                    first = prescription_rows[0]
+                    if isinstance(first, dict) and len(first) == 1 and list(first.keys())[0] == 'Prescription':
+                        inner = list(first.values())[0]
+                        p_rowid = inner.get('ROWID') or inner.get('id') or inner.get('Id')
+                    else:
+                        p_rowid = first.get('ROWID') if isinstance(first, dict) else None
+                    if p_rowid:
+                        prescription_table.delete_row(p_rowid)
+            except Exception:
+                logger.exception('Failed to rollback prescription creation')
+        
+        return make_response(jsonify({
+            'status': 'failure',
+            'error': 'Failed to save prescription',
+            'details': str(e)
+        }), 500)
 
 
 def _list_medicines(request: Request, app):
@@ -785,6 +1165,8 @@ def handler(request: Request):
     try:
         app = zcatalyst_sdk.initialize()
         logger = logging.getLogger()
+        
+        # Patient endpoints
         if request.path == "/add" and request.method == 'POST':
             return _create_patient(request, app)
         if request.path == "/all" and request.method == 'GET':
@@ -793,16 +1175,42 @@ def handler(request: Request):
             return _get_patient_by_phone(request, app)
         if request.method == 'DELETE' and request.path.startswith('/patient'):
             return _delete_patient(request, app)
+        if request.path == "/patient" and request.method == 'PUT':
+            return _update_patient(request, app)
 
-        # Prescription endpoints
+        # Prescription endpoints (UUID-based)
         if request.path == "/prescription/add" and request.method == 'POST':
             return _create_prescription(request, app)
+        if request.path == "/prescription/save" and request.method == 'POST':
+            return _save_prescription_atomic(request, app)
         if request.path == "/prescription/all" and request.method == 'GET':
             return _list_prescriptions(request, app)
-        if request.path == "/prescription" and request.method == 'GET':
-            return _get_prescription_by_patient(request, app)
-        if request.path == "/prescription" and request.method == 'DELETE':
-            return _delete_prescription(request, app)
+        if request.path.startswith("/prescription/get/") and request.method == 'GET':
+            uuid = request.path.split("/prescription/get/")[1]
+            return _get_prescription_by_uuid(request, app, uuid)
+        if request.path.startswith("/prescription/update/") and request.method == 'PUT':
+            uuid = request.path.split("/prescription/update/")[1]
+            return _update_prescription(request, app, uuid)
+        if request.path.startswith("/prescription/delete/") and request.method == 'DELETE':
+            uuid = request.path.split("/prescription/delete/")[1]
+            return _delete_prescription(request, app, uuid)
+        
+        # PrescribedMedicine endpoints
+        if request.path == "/prescribedmedicine/add" and request.method == 'POST':
+            return _create_prescribed_medicine(request, app)
+        if request.path.startswith("/prescribedmedicine/all/") and request.method == 'GET':
+            prescription_uuid = request.path.split("/prescribedmedicine/all/")[1]
+            return _get_prescribed_medicines_by_prescription(request, app, prescription_uuid)
+        if request.path.startswith("/prescribedmedicine/get/") and request.method == 'GET':
+            rowid = request.path.split("/prescribedmedicine/get/")[1]
+            return _get_prescribed_medicine_by_rowid(request, app, rowid)
+        if request.path.startswith("/prescribedmedicine/update/") and request.method == 'PUT':
+            rowid = request.path.split("/prescribedmedicine/update/")[1]
+            return _update_prescribed_medicine(request, app, rowid)
+        if request.path.startswith("/prescribedmedicine/delete/") and request.method == 'DELETE':
+            rowid = request.path.split("/prescribedmedicine/delete/")[1]
+            return _delete_prescribed_medicine(request, app, rowid)
+        
         # MedicineStock endpoints
         if request.path == "/medicinestock/add" and request.method == 'POST':
             return _create_medicine(request, app)
@@ -814,10 +1222,7 @@ def handler(request: Request):
             return _delete_medicine(request, app)
         if request.path == "/medicinestock" and request.method == 'PUT':
             return _update_medicine(request, app)
-        if request.path == "/patient" and request.method == 'PUT':
-            return _update_patient(request, app)
-        if request.path == "/prescription" and request.method == 'PUT':
-            return _update_prescription(request, app)
+        
         print('working')
     except Exception as err:
         logger.error(f"Exception in to_do_list_function :{err}")

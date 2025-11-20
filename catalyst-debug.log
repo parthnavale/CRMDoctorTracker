@@ -7153,3 +7153,292 @@ Response Headers: {"server":"ZGS","date":"Wed, 19 Nov 2025 04:09:13 GMT","conten
 [info] [2025-11-19T04:11:25.787Z] : [react-plugin]: Note that the development build is not optimized.
 [info] [2025-11-19T04:11:25.787Z] : [react-plugin]: To create a production build, use npm run build.
 [info] [2025-11-19T04:11:25.787Z] : [react-plugin]: 
+[debug] [2025-11-20T04:47:13.237Z] : 
+[debug] [2025-11-20T04:47:13.238Z] : ----------------------------------------------------------------------
+[debug] [2025-11-20T04:47:13.239Z] : Command:      /home/parth/.nvm/versions/node/v20.19.0/bin/node /home/parth/.nvm/versions/node/v20.19.0/bin/catalyst serve
+[debug] [2025-11-20T04:47:13.239Z] : CLI Version:  1.21.0
+[debug] [2025-11-20T04:47:13.239Z] : Platform:     linux
+[debug] [2025-11-20T04:47:13.240Z] : Node Version: v20.19.0
+[debug] [2025-11-20T04:47:13.240Z] : Time:         Thu Nov 20 2025 10:17:13 GMT+0530 (India Standard Time)
+[debug] [2025-11-20T04:47:13.240Z] : ----------------------------------------------------------------------
+[debug] [2025-11-20T04:47:13.240Z] : 
+[debug] [2025-11-20T04:47:15.104Z] : > authorizing via signed-in user option
+[debug] [2025-11-20T04:47:15.104Z] : > command requires scopes: ["ZohoCatalyst.projects.ALL","ZohoCatalyst.apigateway.apis.READ","ZohoCatalyst.apigateway.READ","ZohoCatalyst.segments.ALL","ZohoCatalyst.cache.READ","ZohoCatalyst.cache.CREATE","ZohoCatalyst.cache.DELETE","ZohoCatalyst.projects.ALL","ZohoCatalyst.cron.ALL","ZohoCatalyst.zcql.CREATE","ZohoCatalyst.projects.users.READ","ZohoCatalyst.projects.users.CREATE","ZohoCatalyst.projects.users.DELETE","ZohoCatalyst.projects.users.UPDATE","ZohoCatalyst.authentication.CREATE","ZohoCatalyst.email.CREATE","ZohoCatalyst.tables.ALL","ZohoCatalyst.tables.rows.ALL","ZohoCatalyst.tables.columns.ALL","ZohoCatalyst.tables.bulk.CREATE","ZohoCatalyst.tables.bulk.READ","ZohoCatalyst.folders.ALL","ZohoCatalyst.files.CREATE","ZohoCatalyst.files.READ","ZohoCatalyst.files.DELETE","ZohoCatalyst.functions.ALL","ZohoCatalyst.functions.EXECUTE","ZohoCatalyst.eventlistners.ALL","ZohoCatalyst.eventlisteners.produce","ZohoCatalyst.security.rules.Read","ZohoCatalyst.security.rules.Update","ZohoCatalyst.notifications.mobile","ZohoCatalyst.notifications.web","ZohoCatalyst.search.READ","ZohoCatalyst.mlkit.READ","QuickML.deployment.READ","ZohoCatalyst.pdfshot.execute","ZohoCatalyst.circuits.execution.DELETE","ZohoCatalyst.circuits.execution.READ","ZohoCatalyst.circuits.execute","ZohoCatalyst.appsail.Read","ZohoCatalyst.jobpool.READ","ZohoCatalyst.job.ALL","ZohoCatalyst.nosql.READ","ZohoCatalyst.nosql.rows.ALL"]
+[debug] [2025-11-20T04:47:15.113Z] : > refreshing access token <
+[debug] [2025-11-20T04:47:15.114Z] : >>>> HTTP REQUEST : POST https://accounts.zoho.in/oauth/v2/token 
+<request body omitted>
+
+[debug] [2025-11-20T04:47:15.441Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 04:47:15 GMT","content-type":"application/json;charset=UTF-8","content-length":"2419","connection":"keep-alive","cache-control":"no-store","x-content-type-options":"nosniff","pragma":"no-cache","x-frame-options":"SAMEORIGIN","vary":"accept-encoding","content-language":"en-US","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T04:47:15.477Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/22464000000011234 
+
+[debug] [2025-11-20T04:47:15.686Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 04:47:15 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T04:47:15.687Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/22464000000011234/environment 
+
+[debug] [2025-11-20T04:47:15.735Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 04:47:15 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T04:47:16.932Z] : Build folder already exists, starting cleanup
+[debug] [2025-11-20T04:47:16.967Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/22464000000011234/function 
+Query params: {"type":"basicio,event,cron,applogic,integration,browser_logic,job"}
+
+[debug] [2025-11-20T04:47:18.490Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 04:47:16 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T04:47:18.491Z] : unknown eol undefined hence skipping check
+[info] [2025-11-20T04:47:42.888Z] : [react-plugin]: Starting the development server...
+
+[info] [2025-11-20T04:47:42.890Z] : 
+[info] [2025-11-20T04:47:42.890Z] : ℹ Client[drtrackerui]: Plugin : "zcatalyst-cli-plugin-react" is used for client serve
+[info] [2025-11-20T04:47:42.890Z] : 
+[debug] [2025-11-20T04:47:49.760Z] : ruok response: 200: OK
+[info] [2025-11-20T04:47:49.863Z] : 
+[info] [2025-11-20T04:47:49.863Z] :  >>>>>>>>>>>>> AdvancedIO <<<<<<<<<<<< 
+[info] [2025-11-20T04:47:49.864Z] : ℹ dr_tracker_function: http://localhost:3000/server/dr_tracker_function/
+[info] [2025-11-20T04:47:49.864Z] : 
+[info] [2025-11-20T04:47:49.864Z] : 
+[info] [2025-11-20T04:47:49.864Z] :  >>>>>>>>>>>>> Web Client <<<<<<<<<<<<
+[info] [2025-11-20T04:47:49.864Z] : ℹ client[drtrackerui]: http://localhost:3000/app/
+[info] [2025-11-20T04:47:49.864Z] : 
+[info] [2025-11-20T04:47:56.219Z] : [react-plugin]: Compiled successfully!
+[info] [2025-11-20T04:47:56.219Z] : [react-plugin]: 
+[info] [2025-11-20T04:47:56.219Z] : [react-plugin]: You can now view drtrackerui in the browser.
+[info] [2025-11-20T04:47:56.219Z] : [react-plugin]: 
+[info] [2025-11-20T04:47:56.219Z] : [react-plugin]:   Local:            http://localhost:3000/app/
+[info] [2025-11-20T04:47:56.219Z] : [react-plugin]:   On Your Network:  http://192.168.0.11:3000/app/
+[info] [2025-11-20T04:47:56.219Z] : [react-plugin]: 
+[info] [2025-11-20T04:47:56.219Z] : [react-plugin]: Note that the development build is not optimized.
+[info] [2025-11-20T04:47:56.219Z] : [react-plugin]: To create a production build, use npm run build.
+[info] [2025-11-20T04:47:56.220Z] : [react-plugin]: 
+[debug] [2025-11-20T05:33:50.212Z] : 
+[debug] [2025-11-20T05:33:50.214Z] : ----------------------------------------------------------------------
+[debug] [2025-11-20T05:33:50.214Z] : Command:      /home/parth/.nvm/versions/node/v20.19.0/bin/node /home/parth/.nvm/versions/node/v20.19.0/bin/catalyst serve
+[debug] [2025-11-20T05:33:50.214Z] : CLI Version:  1.21.0
+[debug] [2025-11-20T05:33:50.215Z] : Platform:     linux
+[debug] [2025-11-20T05:33:50.215Z] : Node Version: v20.19.0
+[debug] [2025-11-20T05:33:50.215Z] : Time:         Thu Nov 20 2025 11:03:50 GMT+0530 (India Standard Time)
+[debug] [2025-11-20T05:33:50.216Z] : ----------------------------------------------------------------------
+[debug] [2025-11-20T05:33:50.216Z] : 
+[debug] [2025-11-20T05:33:51.547Z] : > authorizing via signed-in user option
+[debug] [2025-11-20T05:33:51.547Z] : > command requires scopes: ["ZohoCatalyst.projects.ALL","ZohoCatalyst.apigateway.apis.READ","ZohoCatalyst.apigateway.READ","ZohoCatalyst.segments.ALL","ZohoCatalyst.cache.READ","ZohoCatalyst.cache.CREATE","ZohoCatalyst.cache.DELETE","ZohoCatalyst.projects.ALL","ZohoCatalyst.cron.ALL","ZohoCatalyst.zcql.CREATE","ZohoCatalyst.projects.users.READ","ZohoCatalyst.projects.users.CREATE","ZohoCatalyst.projects.users.DELETE","ZohoCatalyst.projects.users.UPDATE","ZohoCatalyst.authentication.CREATE","ZohoCatalyst.email.CREATE","ZohoCatalyst.tables.ALL","ZohoCatalyst.tables.rows.ALL","ZohoCatalyst.tables.columns.ALL","ZohoCatalyst.tables.bulk.CREATE","ZohoCatalyst.tables.bulk.READ","ZohoCatalyst.folders.ALL","ZohoCatalyst.files.CREATE","ZohoCatalyst.files.READ","ZohoCatalyst.files.DELETE","ZohoCatalyst.functions.ALL","ZohoCatalyst.functions.EXECUTE","ZohoCatalyst.eventlistners.ALL","ZohoCatalyst.eventlisteners.produce","ZohoCatalyst.security.rules.Read","ZohoCatalyst.security.rules.Update","ZohoCatalyst.notifications.mobile","ZohoCatalyst.notifications.web","ZohoCatalyst.search.READ","ZohoCatalyst.mlkit.READ","QuickML.deployment.READ","ZohoCatalyst.pdfshot.execute","ZohoCatalyst.circuits.execution.DELETE","ZohoCatalyst.circuits.execution.READ","ZohoCatalyst.circuits.execute","ZohoCatalyst.appsail.Read","ZohoCatalyst.jobpool.READ","ZohoCatalyst.job.ALL","ZohoCatalyst.nosql.READ","ZohoCatalyst.nosql.rows.ALL"]
+[debug] [2025-11-20T05:33:51.562Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/22464000000011234 
+
+[debug] [2025-11-20T05:33:51.843Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 05:33:51 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T05:33:51.846Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/22464000000011234/environment 
+
+[debug] [2025-11-20T05:33:51.932Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 05:33:51 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T05:33:53.195Z] : Build folder already exists, starting cleanup
+[debug] [2025-11-20T05:33:53.245Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/22464000000011234/function 
+Query params: {"type":"basicio,event,cron,applogic,integration,browser_logic,job"}
+
+[debug] [2025-11-20T05:33:54.334Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 05:33:53 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T05:33:54.338Z] : unknown eol undefined hence skipping check
+[info] [2025-11-20T05:34:15.063Z] : [react-plugin]: Starting the development server...
+
+[info] [2025-11-20T05:34:15.065Z] : 
+[info] [2025-11-20T05:34:15.065Z] : ℹ Client[drtrackerui]: Plugin : "zcatalyst-cli-plugin-react" is used for client serve
+[info] [2025-11-20T05:34:15.065Z] : 
+[debug] [2025-11-20T05:34:20.493Z] : ruok response: 200: OK
+[info] [2025-11-20T05:34:20.598Z] : 
+[info] [2025-11-20T05:34:20.598Z] :  >>>>>>>>>>>>> AdvancedIO <<<<<<<<<<<< 
+[info] [2025-11-20T05:34:20.598Z] : ℹ dr_tracker_function: http://localhost:3000/server/dr_tracker_function/
+[info] [2025-11-20T05:34:20.598Z] : 
+[info] [2025-11-20T05:34:20.598Z] : 
+[info] [2025-11-20T05:34:20.598Z] :  >>>>>>>>>>>>> Web Client <<<<<<<<<<<<
+[info] [2025-11-20T05:34:20.599Z] : ℹ client[drtrackerui]: http://localhost:3000/app/
+[info] [2025-11-20T05:34:20.599Z] : 
+[info] [2025-11-20T05:34:27.613Z] : [react-plugin]: Compiled successfully!
+[info] [2025-11-20T05:34:27.613Z] : [react-plugin]: 
+[info] [2025-11-20T05:34:27.613Z] : [react-plugin]: You can now view drtrackerui in the browser.
+[info] [2025-11-20T05:34:27.613Z] : [react-plugin]: 
+[info] [2025-11-20T05:34:27.613Z] : [react-plugin]:   Local:            http://localhost:3000/app/
+[info] [2025-11-20T05:34:27.613Z] : [react-plugin]:   On Your Network:  http://192.168.0.11:3000/app/
+[info] [2025-11-20T05:34:27.613Z] : [react-plugin]: 
+[info] [2025-11-20T05:34:27.614Z] : [react-plugin]: Note that the development build is not optimized.
+[info] [2025-11-20T05:34:27.614Z] : [react-plugin]: To create a production build, use npm run build.
+[info] [2025-11-20T05:34:27.614Z] : [react-plugin]: 
+[debug] [2025-11-20T05:47:30.572Z] : > refreshing access token <
+[debug] [2025-11-20T05:47:30.574Z] : >>>> HTTP REQUEST : POST https://accounts.zoho.in/oauth/v2/token 
+<request body omitted>
+
+[debug] [2025-11-20T05:47:30.782Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 05:47:30 GMT","content-type":"application/json;charset=UTF-8","content-length":"2419","connection":"keep-alive","cache-control":"no-store","x-content-type-options":"nosniff","pragma":"no-cache","x-frame-options":"SAMEORIGIN","vary":"accept-encoding","content-language":"en-US","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[info] [2025-11-20T06:23:19.565Z] : 
+change of main.py in dr_tracker_function detected. Preparing your function, please wait...
+[debug] [2025-11-20T06:23:19.680Z] : Python child exit: 0, null
+[info] [2025-11-20T06:23:24.162Z] : ℹ AdvancedIO[dr_tracker_function]: ready!
+[info] [2025-11-20T06:23:24.163Z] : ℹ AdvancedIO[dr_tracker_function]: http://localhost:3000/server/dr_tracker_function/
+[debug] [2025-11-20T06:23:24.369Z] : ruok response: 200: OK
+[info] [2025-11-20T06:23:25.164Z] : 
+change of main.py in dr_tracker_function detected. Preparing your function, please wait...
+[debug] [2025-11-20T06:23:25.204Z] : Python child exit: 0, null
+[info] [2025-11-20T06:23:30.580Z] : ℹ AdvancedIO[dr_tracker_function]: ready!
+[info] [2025-11-20T06:23:30.580Z] : ℹ AdvancedIO[dr_tracker_function]: http://localhost:3000/server/dr_tracker_function/
+[debug] [2025-11-20T06:23:30.686Z] : ruok response: 200: OK
+[info] [2025-11-20T06:23:32.396Z] : 
+change of main.py in dr_tracker_function detected. Preparing your function, please wait...
+[debug] [2025-11-20T06:23:32.453Z] : Python child exit: 0, null
+[info] [2025-11-20T06:23:37.240Z] : ℹ AdvancedIO[dr_tracker_function]: ready!
+[info] [2025-11-20T06:23:37.240Z] : ℹ AdvancedIO[dr_tracker_function]: http://localhost:3000/server/dr_tracker_function/
+[debug] [2025-11-20T06:23:37.345Z] : ruok response: 200: OK
+[info] [2025-11-20T06:24:03.962Z] : 
+change of NEW_API_ENDPOINTS.md in dr_tracker_function detected. Preparing your function, please wait...
+[debug] [2025-11-20T06:24:04.012Z] : Python child exit: 0, null
+[info] [2025-11-20T06:24:07.681Z] : ℹ AdvancedIO[dr_tracker_function]: ready!
+[info] [2025-11-20T06:24:07.681Z] : ℹ AdvancedIO[dr_tracker_function]: http://localhost:3000/server/dr_tracker_function/
+[debug] [2025-11-20T06:24:07.784Z] : ruok response: 200: OK
+[info] [2025-11-20T06:24:13.488Z] : 
+change of NEW_API_ENDPOINTS.md in dr_tracker_function detected. Preparing your function, please wait...
+[debug] [2025-11-20T06:24:13.545Z] : Python child exit: 0, null
+[info] [2025-11-20T06:24:17.256Z] : ℹ AdvancedIO[dr_tracker_function]: ready!
+[info] [2025-11-20T06:24:17.257Z] : ℹ AdvancedIO[dr_tracker_function]: http://localhost:3000/server/dr_tracker_function/
+[debug] [2025-11-20T06:24:17.362Z] : ruok response: 200: OK
+[info] [2025-11-20T06:24:39.082Z] : 
+change of NEW_API_ENDPOINTS.md in dr_tracker_function detected. Preparing your function, please wait...
+[debug] [2025-11-20T06:24:39.121Z] : Python child exit: 0, null
+[info] [2025-11-20T06:24:42.086Z] : ℹ AdvancedIO[dr_tracker_function]: ready!
+[info] [2025-11-20T06:24:42.086Z] : ℹ AdvancedIO[dr_tracker_function]: http://localhost:3000/server/dr_tracker_function/
+[debug] [2025-11-20T06:24:42.190Z] : ruok response: 200: OK
+[info] [2025-11-20T06:25:16.507Z] : 
+change of main.py in dr_tracker_function detected. Preparing your function, please wait...
+[debug] [2025-11-20T06:25:16.537Z] : Python child exit: 0, null
+[info] [2025-11-20T06:25:19.274Z] : ℹ AdvancedIO[dr_tracker_function]: ready!
+[info] [2025-11-20T06:25:19.274Z] : ℹ AdvancedIO[dr_tracker_function]: http://localhost:3000/server/dr_tracker_function/
+[debug] [2025-11-20T06:25:19.377Z] : ruok response: 200: OK
+[info] [2025-11-20T06:29:43.646Z] : Shutting down server
+[debug] [2025-11-20T06:29:43.661Z] : Python child exit: null, SIGINT
+[info] [2025-11-20T06:29:43.787Z] : 
+[info] [2025-11-20T06:29:43.787Z] : ✔ Shutdown complete
+[debug] [2025-11-20T06:29:43.787Z] : NO ERRORS REGISTERED
+[debug] [2025-11-20T06:29:43.788Z] : EXEC ENDED with event: serve, message: success
+[debug] [2025-11-20T06:29:43.788Z] : TOTAL DURATION OF COMMAND EXEC : 3352259
+[debug] [2025-11-20T06:29:43.966Z] : >>>> HTTP REQUEST : POST https://api.catalyst.zoho.in/baas/v1/cli/logs 
+<request body omitted>
+
+[debug] [2025-11-20T06:29:44.267Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 06:29:44 GMT","content-length":"0","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T06:29:51.672Z] : 
+[debug] [2025-11-20T06:29:51.673Z] : ----------------------------------------------------------------------
+[debug] [2025-11-20T06:29:51.674Z] : Command:      /home/parth/.nvm/versions/node/v20.19.0/bin/node /home/parth/.nvm/versions/node/v20.19.0/bin/catalyst serve
+[debug] [2025-11-20T06:29:51.674Z] : CLI Version:  1.21.0
+[debug] [2025-11-20T06:29:51.674Z] : Platform:     linux
+[debug] [2025-11-20T06:29:51.675Z] : Node Version: v20.19.0
+[debug] [2025-11-20T06:29:51.675Z] : Time:         Thu Nov 20 2025 11:59:51 GMT+0530 (India Standard Time)
+[debug] [2025-11-20T06:29:51.675Z] : ----------------------------------------------------------------------
+[debug] [2025-11-20T06:29:51.675Z] : 
+[debug] [2025-11-20T06:29:52.963Z] : > authorizing via signed-in user option
+[debug] [2025-11-20T06:29:52.964Z] : > command requires scopes: ["ZohoCatalyst.projects.ALL","ZohoCatalyst.apigateway.apis.READ","ZohoCatalyst.apigateway.READ","ZohoCatalyst.segments.ALL","ZohoCatalyst.cache.READ","ZohoCatalyst.cache.CREATE","ZohoCatalyst.cache.DELETE","ZohoCatalyst.projects.ALL","ZohoCatalyst.cron.ALL","ZohoCatalyst.zcql.CREATE","ZohoCatalyst.projects.users.READ","ZohoCatalyst.projects.users.CREATE","ZohoCatalyst.projects.users.DELETE","ZohoCatalyst.projects.users.UPDATE","ZohoCatalyst.authentication.CREATE","ZohoCatalyst.email.CREATE","ZohoCatalyst.tables.ALL","ZohoCatalyst.tables.rows.ALL","ZohoCatalyst.tables.columns.ALL","ZohoCatalyst.tables.bulk.CREATE","ZohoCatalyst.tables.bulk.READ","ZohoCatalyst.folders.ALL","ZohoCatalyst.files.CREATE","ZohoCatalyst.files.READ","ZohoCatalyst.files.DELETE","ZohoCatalyst.functions.ALL","ZohoCatalyst.functions.EXECUTE","ZohoCatalyst.eventlistners.ALL","ZohoCatalyst.eventlisteners.produce","ZohoCatalyst.security.rules.Read","ZohoCatalyst.security.rules.Update","ZohoCatalyst.notifications.mobile","ZohoCatalyst.notifications.web","ZohoCatalyst.search.READ","ZohoCatalyst.mlkit.READ","QuickML.deployment.READ","ZohoCatalyst.pdfshot.execute","ZohoCatalyst.circuits.execution.DELETE","ZohoCatalyst.circuits.execution.READ","ZohoCatalyst.circuits.execute","ZohoCatalyst.appsail.Read","ZohoCatalyst.jobpool.READ","ZohoCatalyst.job.ALL","ZohoCatalyst.nosql.READ","ZohoCatalyst.nosql.rows.ALL"]
+[debug] [2025-11-20T06:29:52.983Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/22464000000011234 
+
+[debug] [2025-11-20T06:29:53.176Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 06:29:53 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T06:29:53.179Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/22464000000011234/environment 
+
+[debug] [2025-11-20T06:29:53.234Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 06:29:53 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T06:29:54.532Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/22464000000011234/function 
+Query params: {"type":"basicio,event,cron,applogic,integration,browser_logic,job"}
+
+[debug] [2025-11-20T06:29:55.636Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 06:29:54 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T06:29:55.638Z] : unknown eol undefined hence skipping check
+[info] [2025-11-20T06:30:16.321Z] : [react-plugin]: Starting the development server...
+
+[info] [2025-11-20T06:30:16.323Z] : 
+[info] [2025-11-20T06:30:16.323Z] : ℹ Client[drtrackerui]: Plugin : "zcatalyst-cli-plugin-react" is used for client serve
+[info] [2025-11-20T06:30:16.323Z] : 
+[debug] [2025-11-20T06:30:21.618Z] : ruok response: 200: OK
+[info] [2025-11-20T06:30:21.718Z] : 
+[info] [2025-11-20T06:30:21.718Z] :  >>>>>>>>>>>>> AdvancedIO <<<<<<<<<<<< 
+[info] [2025-11-20T06:30:21.719Z] : ℹ dr_tracker_function: http://localhost:3000/server/dr_tracker_function/
+[info] [2025-11-20T06:30:21.719Z] : 
+[info] [2025-11-20T06:30:21.719Z] : 
+[info] [2025-11-20T06:30:21.719Z] :  >>>>>>>>>>>>> Web Client <<<<<<<<<<<<
+[info] [2025-11-20T06:30:21.719Z] : ℹ client[drtrackerui]: http://localhost:3000/app/
+[info] [2025-11-20T06:30:21.719Z] : 
+[info] [2025-11-20T06:30:27.833Z] : [react-plugin]: Compiled successfully!
+[info] [2025-11-20T06:30:27.833Z] : [react-plugin]: 
+[info] [2025-11-20T06:30:27.833Z] : [react-plugin]: You can now view drtrackerui in the browser.
+[info] [2025-11-20T06:30:27.833Z] : [react-plugin]: 
+[info] [2025-11-20T06:30:27.833Z] : [react-plugin]:   Local:            http://localhost:3000/app/
+[info] [2025-11-20T06:30:27.833Z] : [react-plugin]:   On Your Network:  http://192.168.0.11:3000/app/
+[info] [2025-11-20T06:30:27.833Z] : [react-plugin]: 
+[info] [2025-11-20T06:30:27.833Z] : [react-plugin]: Note that the development build is not optimized.
+[info] [2025-11-20T06:30:27.834Z] : [react-plugin]: To create a production build, use npm run build.
+[info] [2025-11-20T06:30:27.834Z] : [react-plugin]: 
+[debug] [2025-11-20T06:47:52.749Z] : > refreshing access token <
+[debug] [2025-11-20T06:47:52.751Z] : >>>> HTTP REQUEST : POST https://accounts.zoho.in/oauth/v2/token 
+<request body omitted>
+
+[debug] [2025-11-20T06:47:52.954Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 06:47:52 GMT","content-type":"application/json;charset=UTF-8","content-length":"2419","connection":"keep-alive","cache-control":"no-store","x-content-type-options":"nosniff","pragma":"no-cache","x-frame-options":"SAMEORIGIN","vary":"accept-encoding","content-language":"en-US","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[info] [2025-11-20T07:00:34.625Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T07:00:48.667Z] : [react-plugin]: Compiled successfully!
+[info] [2025-11-20T07:00:48.668Z] : [react-plugin]: 
+[info] [2025-11-20T07:00:48.668Z] : [react-plugin]: You can now view drtrackerui in the browser.
+[info] [2025-11-20T07:00:48.668Z] : [react-plugin]: 
+[info] [2025-11-20T07:00:48.668Z] : [react-plugin]:   Local:            http://localhost:3000/app/
+[info] [2025-11-20T07:00:48.669Z] : [react-plugin]:   On Your Network:  http://192.168.0.11:3000/app/
+[info] [2025-11-20T07:00:48.669Z] : [react-plugin]: 
+[info] [2025-11-20T07:00:48.669Z] : [react-plugin]: Note that the development build is not optimized.
+[info] [2025-11-20T07:00:48.669Z] : [react-plugin]: To create a production build, use npm run build.
+[info] [2025-11-20T07:00:48.669Z] : [react-plugin]: 
+[info] [2025-11-20T07:01:09.015Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T07:01:10.662Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T07:01:10.662Z] : [react-plugin]: [eslint] 
+src/pages/AddPrescriptionPage.jsx
+  Line 14:30:  'patientsLoading' is assigned a value but never used                                                                     no-unused-vars
+  Line 17:15:  'contextHolder' is assigned a value but never used                                                                       no-unused-vars
+  Line 24:6:   React Hook useEffect has a missing dependency: 'loadPrescriptionData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 169:9:  'handleRemoveMedicine' is assigned a value but never used                                                                no-unused-vars
+[info] [2025-11-20T07:01:10.662Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T07:01:10.663Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T07:01:30.898Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T07:01:32.172Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T07:01:32.172Z] : [react-plugin]: [eslint] 
+src/pages/AddPrescriptionPage.jsx
+  Line 24:6:   React Hook useEffect has a missing dependency: 'loadPrescriptionData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 169:9:  'handleRemoveMedicine' is assigned a value but never used                                                                no-unused-vars
+[info] [2025-11-20T07:01:32.172Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T07:01:32.172Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T07:02:02.824Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T07:02:07.474Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T07:02:07.474Z] : [react-plugin]: [eslint] 
+src/pages/AddPrescriptionPage.jsx
+  Line 24:6:  React Hook useEffect has a missing dependency: 'loadPrescriptionData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+[info] [2025-11-20T07:02:07.475Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T07:02:07.475Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T07:04:10.476Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T07:04:11.540Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T07:04:11.540Z] : [react-plugin]: [eslint] 
+src/pages/AddPrescriptionPage.jsx
+  Line 24:6:  React Hook useEffect has a missing dependency: 'loadPrescriptionData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+[info] [2025-11-20T07:04:11.541Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T07:04:11.541Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
