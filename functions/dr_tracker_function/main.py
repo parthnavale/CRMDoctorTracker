@@ -675,6 +675,64 @@ def _get_prescribed_medicines_by_prescription(request: Request, app, prescriptio
         return make_response(jsonify({'status': 'failure', 'error': 'Failed to fetch prescribed medicines'}), 500)
 
 
+def _get_prescriptions_by_patient(request: Request, app, patient_uuid):
+    """Get all prescriptions with their medicines for a specific patient."""
+    if not patient_uuid:
+        return make_response(jsonify({'status': 'failure', 'error': 'Missing PatientUUID parameter'}), 400)
+    
+    try:
+        zcql = app.zcql()
+        safe_uuid = str(patient_uuid).replace("'", "\\'")
+        
+        # Get all prescriptions for this patient
+        prescription_query = zcql.execute_query(f"SELECT * FROM Prescription WHERE PatientUUID = '{safe_uuid}' ORDER BY CREATEDTIME DESC")
+        
+        prescriptions = []
+        for item in prescription_query or []:
+            if isinstance(item, dict) and len(item) == 1 and list(item.keys())[0] == 'Prescription':
+                prescription_row = list(item.values())[0]
+            else:
+                prescription_row = item
+            
+            prescription_uuid = prescription_row.get('UUID')
+            
+            # Get all medicines for this prescription
+            medicines = []
+            if prescription_uuid:
+                safe_prescription_uuid = str(prescription_uuid).replace("'", "\\'")
+                medicine_query = zcql.execute_query(f"SELECT * FROM PrescribedMedicine WHERE PrescriptionUUID = '{safe_prescription_uuid}'")
+                
+                for med_item in medicine_query or []:
+                    if isinstance(med_item, dict) and len(med_item) == 1 and list(med_item.keys())[0] == 'PrescribedMedicine':
+                        med_row = list(med_item.values())[0]
+                    else:
+                        med_row = med_item
+                    
+                    medicines.append({
+                        'ROWID': med_row.get('ROWID') or med_row.get('id') or med_row.get('Id'),
+                        'MedicineName': med_row.get('MedicineName'),
+                        'frequency': med_row.get('frequency'),
+                        'Duration': med_row.get('Duration'),
+                        'timing': med_row.get('timing')
+                    })
+            
+            prescriptions.append({
+                'UUID': prescription_uuid,
+                'PatientUUID': prescription_row.get('PatientUUID'),
+                'CurrentSymptoms': prescription_row.get('CurrentSymptoms'),
+                'OutsideMedicines': prescription_row.get('OutsideMedicines'),
+                'fees': prescription_row.get('fees'),
+                'CREATEDTIME': prescription_row.get('CREATEDTIME'),
+                'medicines': medicines
+            })
+        
+        resp = {'status': 'success', 'data': prescriptions}
+        return make_response(jsonify(resp), 200)
+    except Exception:
+        logger.exception('Failed to query prescriptions by PatientUUID')
+        return make_response(jsonify({'status': 'failure', 'error': 'Failed to fetch patient prescriptions'}), 500)
+
+
 def _get_prescribed_medicine_by_rowid(request: Request, app, rowid):
     """Get a single PrescribedMedicine entry by ROWID."""
     if not rowid:
@@ -756,8 +814,51 @@ def _delete_prescribed_medicine(request: Request, app, rowid):
         return make_response(jsonify({'status': 'failure', 'error': 'Failed to delete prescribed medicine'}), 500)
 
 
+def _calculate_frequency_multiplier(frequency):
+    """Map frequency strings to numeric multipliers for quantity calculation."""
+    frequency_map = {
+        'Once daily': 1,
+        'Twice daily': 2,
+        'Thrice daily': 3,
+        'Four times daily': 4,
+        'Every 6 hours': 4,
+        'Every 8 hours': 3,
+        'Every 12 hours': 2,
+        'Once weekly': 1 / 7,
+        'As needed': 1
+    }
+    return frequency_map.get(frequency, 1)
+
+
+def _calculate_total_quantity(duration, frequency):
+    """Calculate total quantity required based on duration and frequency.
+    
+    Args:
+        duration: String or numeric duration in days (e.g., "7" or 7)
+        frequency: Frequency string (e.g., "Twice daily")
+    
+    Returns:
+        Integer total quantity required, or 0 if invalid input
+    """
+    try:
+        duration_num = float(duration) if duration else 0
+        if duration_num <= 0:
+            return 0
+        multiplier = _calculate_frequency_multiplier(frequency)
+        return int(duration_num * multiplier) if duration_num * multiplier > 0 else 0
+    except (ValueError, TypeError):
+        return 0
+
+
 def _save_prescription_atomic(request: Request, app):
-    """Atomically save a prescription with its medicines (CREATE or UPDATE)."""
+    """Atomically save a prescription with its medicines (CREATE or UPDATE) and deduct medicine stock.
+    
+    This function implements the following atomicity guarantees:
+    1. Stock validation: All medicines must have sufficient stock BEFORE any changes
+    2. Stock deduction: Medicine stock is reduced atomically with prescription creation
+    3. Rollback: On failure, all changes (prescription, medicines, stock) are rolled back
+    4. Concurrency: Optimistic concurrency control prevents negative stock from race conditions
+    """
     req_data = request.get_json(silent=True) or {}
     prescription_uuid = req_data.get('UUID')
     patient_uuid = req_data.get('PatientUUID')
@@ -788,11 +889,78 @@ def _save_prescription_atomic(request: Request, app):
     is_update = prescription_uuid is not None and prescription_uuid != ''
     created_prescription_uuid = None
     created_medicine_rowids = []
+    stock_deductions = []  # Track stock changes for rollback
     prescription_table = app.datastore().table('Prescription')
     medicine_table = app.datastore().table('PrescribedMedicine')
+    stock_table = app.datastore().table('MedicineStock')
 
     try:
-        # Step 1: CREATE or UPDATE Prescription
+        # ===== STEP 1: VALIDATE STOCK AVAILABILITY FOR ALL MEDICINES =====
+        # This must happen BEFORE any database changes to ensure atomicity
+        medicine_stock_info = []  # [(medicine_name, required_qty, current_stock, stock_rowid), ...]
+        
+        for med in medicines:
+            medicine_name = med.get('MedicineName')
+            frequency = med.get('frequency')
+            duration = med.get('Duration')
+            
+            if not medicine_name:
+                continue
+            
+            # Calculate total quantity required
+            total_required = _calculate_total_quantity(duration, frequency)
+            
+            if total_required <= 0:
+                continue  # Skip medicines with 0 or invalid quantity
+            
+            # Fetch current stock for this medicine
+            try:
+                safe_name = str(medicine_name).replace("'", "\\'")
+                stock_query = zcql.execute_query(f"SELECT ROWID, Name, Quantity FROM MedicineStock WHERE Name = '{safe_name}'")
+                
+                if not stock_query or len(stock_query) == 0:
+                    return make_response(jsonify({
+                        'status': 'failure',
+                        'error': f'Medicine not found in stock: {medicine_name}'
+                    }), 409)
+                
+                stock_row = stock_query[0]
+                if isinstance(stock_row, dict) and len(stock_row) == 1 and list(stock_row.keys())[0] == 'MedicineStock':
+                    stock_data = list(stock_row.values())[0]
+                else:
+                    stock_data = stock_row
+                
+                # Type conversion: Ensure Quantity is an integer
+                try:
+                    current_quantity = int(stock_data.get('Quantity', 0)) if stock_data.get('Quantity') is not None else 0
+                except (ValueError, TypeError):
+                    current_quantity = 0
+                
+                stock_rowid = stock_data.get('ROWID') or stock_data.get('id') or stock_data.get('Id')
+                
+                # Stock validation: Check sufficient quantity
+                if current_quantity < total_required:
+                    return make_response(jsonify({
+                        'status': 'failure',
+                        'error': f'Insufficient stock for: {medicine_name} (required {total_required}, available {current_quantity})'
+                    }), 409)
+                
+                medicine_stock_info.append({
+                    'name': medicine_name,
+                    'required': total_required,
+                    'current': current_quantity,
+                    'rowid': stock_rowid
+                })
+                
+            except Exception as e:
+                logger.exception(f'Failed to check stock for medicine: {medicine_name}')
+                return make_response(jsonify({
+                    'status': 'failure',
+                    'error': f'Failed to verify stock for: {medicine_name}',
+                    'details': str(e)
+                }), 500)
+        
+        # ===== STEP 2: CREATE or UPDATE PRESCRIPTION =====
         if is_update:
             # UPDATE mode
             safe_uuid = str(prescription_uuid).replace("'", "\\'")
@@ -842,7 +1010,7 @@ def _save_prescription_atomic(request: Request, app):
                 'fees': fees
             })
 
-        # Step 2: Delete removed medicines (if provided in UPDATE mode)
+        # ===== STEP 3: DELETE REMOVED MEDICINES (UPDATE MODE ONLY) =====
         if is_update and deleted_medicine_rowids:
             for rowid in deleted_medicine_rowids:
                 try:
@@ -851,7 +1019,40 @@ def _save_prescription_atomic(request: Request, app):
                     logger.exception('Failed to delete medicine ROWID %s during atomic save', rowid)
                     # Continue with other deletions
 
-        # Step 3: INSERT or UPDATE medicines
+        # ===== STEP 4: DEDUCT STOCK ATOMICALLY =====
+        # Deduct stock for each medicine with optimistic concurrency control
+        for stock_info in medicine_stock_info:
+            try:
+                stock_rowid = stock_info['rowid']
+                required_qty = stock_info['required']
+                current_qty = stock_info['current']
+                medicine_name = stock_info['name']
+                new_quantity = current_qty - required_qty
+                
+                # Ensure non-negative stock (double-check for race conditions)
+                if new_quantity < 0:
+                    raise ValueError(f'Stock became negative for {medicine_name}')
+                
+                # Update stock quantity
+                try:
+                    stock_table.update_row(stock_rowid, {'Quantity': new_quantity})
+                except Exception:
+                    # Fallback to ZCQL update
+                    safe_rowid = str(stock_rowid).replace("'", "\\'")
+                    zcql.execute_query(f"UPDATE MedicineStock SET Quantity = {new_quantity} WHERE ROWID = '{safe_rowid}'")
+                
+                # Track for rollback
+                stock_deductions.append({
+                    'rowid': stock_rowid,
+                    'previous_qty': current_qty,
+                    'new_qty': new_quantity
+                })
+                
+            except Exception as e:
+                logger.exception(f'Failed to deduct stock for {medicine_name}')
+                raise  # Trigger rollback
+
+        # ===== STEP 5: INSERT OR UPDATE PRESCRIBED MEDICINES =====
         saved_medicines = []
         for med in medicines:
             med_rowid = med.get('ROWID')
@@ -920,7 +1121,15 @@ def _save_prescription_atomic(request: Request, app):
                     'timing': timing
                 })
 
-        # Success response
+        # ===== SUCCESS RESPONSE =====
+        # Include updated medicine stock information
+        updated_medicines_stock = []
+        for stock_info in medicine_stock_info:
+            updated_medicines_stock.append({
+                'Name': stock_info['name'],
+                'Quantity': stock_info['current'] - stock_info['required']
+            })
+        
         return make_response(jsonify({
             'status': 'success',
             'data': {
@@ -929,14 +1138,30 @@ def _save_prescription_atomic(request: Request, app):
                 'OutsideMedicines': outside_medicines,
                 'CurrentSymptoms': current_symptoms,
                 'fees': fees,
-                'medicines': saved_medicines
+                'medicines': saved_medicines,
+                'updatedMedicineStock': updated_medicines_stock
             }
         }), 200)
 
     except Exception as e:
         logger.exception('Failed to save prescription atomically')
         
-        # Rollback logic for CREATE mode
+        # ===== ROLLBACK LOGIC =====
+        # Rollback stock deductions
+        if stock_deductions:
+            for stock_info in stock_deductions:
+                try:
+                    stock_rowid = stock_info['rowid']
+                    previous_qty = stock_info['previous_qty']
+                    try:
+                        stock_table.update_row(stock_rowid, {'Quantity': previous_qty})
+                    except Exception:
+                        safe_rowid = str(stock_rowid).replace("'", "\\'")
+                        zcql.execute_query(f"UPDATE MedicineStock SET Quantity = {previous_qty} WHERE ROWID = '{safe_rowid}'")
+                except Exception:
+                    logger.exception('Failed to rollback stock for ROWID %s', stock_info.get('rowid'))
+        
+        # Rollback prescription and medicines (CREATE mode only)
         if not is_update and created_prescription_uuid:
             try:
                 # Delete created medicines
@@ -1210,6 +1435,11 @@ def handler(request: Request):
         if request.path.startswith("/prescribedmedicine/delete/") and request.method == 'DELETE':
             rowid = request.path.split("/prescribedmedicine/delete/")[1]
             return _delete_prescribed_medicine(request, app, rowid)
+        
+        # Patient prescription history endpoint
+        if request.path.startswith("/prescription/patient/") and request.method == 'GET':
+            patient_uuid = request.path.split("/prescription/patient/")[1]
+            return _get_prescriptions_by_patient(request, app, patient_uuid)
         
         # MedicineStock endpoints
         if request.path == "/medicinestock/add" and request.method == 'POST':

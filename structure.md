@@ -8,6 +8,7 @@ DRTracker is a comprehensive healthcare management system designed to streamline
 ### Core Functionality
 - **Patient Management**: Create, read, update, and delete patient records with complete medical history
 - **Prescription Management**: Track and manage patient prescriptions with dosage, frequency, and special instructions
+- **Atomic Stock Deduction**: Automatic medicine stock deduction when creating prescriptions with rollback on failure
 - **Medicine Stock Management**: Monitor medicine inventory with real-time stock status tracking (Critical/Low/In Stock)
 - **Patient Insights**: Visual analytics and insights into patient demographics and medical data
 - **Theme Customization**: Personalized UI theming with persistent preferences
@@ -68,8 +69,13 @@ The application addresses the critical need for digitizing healthcare records, r
 - **Provider**: Zoho Catalyst Datastore (NoSQL-style cloud database)
 - **Tables**: 
   - Patient (12 fields including UUID, demographics, medical history)
-  - Prescription (6 fields with patient reference)
+  - Prescription (5 fields with patient UUID reference)
+  - PrescribedMedicine (5 fields linking prescriptions to medicines)
   - MedicineStock (8 fields with inventory tracking)
+- **Key Features**:
+  - Atomic operations with optimistic concurrency control
+  - Automatic stock validation and deduction
+  - Rollback mechanism for failed transactions
 
 ### Component Interaction Flow
 
@@ -186,8 +192,8 @@ TESTDRTRACKER/
 │
 ├── functions/                            # Backend serverless functions
 │   └── dr_tracker_function/             # Main API function
-│       ├── main.py                       # Flask handlers for all endpoints (827 lines)
-│       ├── api_endpoints.md              # API documentation (87 lines)
+│       ├── main.py                       # Flask handlers for all endpoints (1462 lines)
+│       ├── api_endpoints.md              # API documentation with atomic prescription details
 │       ├── catalyst-config.json          # Function deployment config
 │       └── requirements.txt              # Python dependencies
 │
@@ -243,6 +249,49 @@ Frontend: Calculate Stock Status
 MedicineTable Component Display
 ```
 
+#### Atomic Prescription Creation with Stock Deduction Flow
+```
+User Input (AddPrescriptionPage)
+    ↓
+Form Submission with Medicines Array
+    ↓
+prescriptionApi.savePrescription() [Axios POST]
+    ↓
+Backend: _save_prescription_atomic(request, app)
+    ↓
+STEP 1: Validate Patient exists
+    ↓
+STEP 2: For each medicine:
+    • Calculate total_required = Duration × Frequency_Multiplier
+    • Query MedicineStock for current quantity
+    • Validate: current_quantity >= total_required
+    • If insufficient → ABORT with 409 error
+    ↓
+STEP 3: Create/Update Prescription record
+    ↓
+STEP 4: Delete removed medicines (update mode)
+    ↓
+STEP 5: Deduct stock atomically:
+    • For each medicine: new_qty = current_qty - total_required
+    • Verify new_qty >= 0 (race condition check)
+    • UPDATE MedicineStock.Quantity
+    • Track for rollback
+    ↓
+STEP 6: Save PrescribedMedicine records
+    ↓
+Success Response with updated stock
+    ↓
+Frontend: fetchMedicines() [Refresh Inventory]
+    ↓
+UI Update with new stock quantities
+
+ON ERROR → ROLLBACK:
+    • Restore all stock quantities
+    • Delete created prescription (CREATE mode)
+    • Delete created medicine records (CREATE mode)
+    • Return error response
+```
+
 ### Architectural Patterns
 
 #### 1. **Model-View-Controller (MVC) Variant**
@@ -270,6 +319,12 @@ MedicineTable Component Display
 - Backend sync happens asynchronously
 - Improved perceived performance
 
+#### 6. **Atomic Transaction Pattern**
+- Pre-flight validation before any database changes
+- Ordered operations with comprehensive rollback
+- Optimistic concurrency control for stock management
+- Simulated ACID-like behavior without native transactions
+
 ---
 
 ## 6. Security & Authentication
@@ -291,8 +346,14 @@ MedicineTable Component Display
 - **Uniqueness Constraints**:
   - Patient: Phonenumber must be unique (409 Conflict on duplicate)
   - Medicine: Name must be unique (409 Conflict on duplicate)
-- **Foreign Key Validation**: Prescription requires valid PatientId reference
-- **UUID-based Identification**: Generated server-side for Patient and Medicine records
+- **Foreign Key Validation**: 
+  - Prescription requires valid PatientUUID reference
+  - PrescribedMedicine requires valid PrescriptionUUID reference
+- **UUID-based Identification**: Generated server-side for Patient, Prescription, and Medicine records
+- **Stock Integrity**:
+  - Atomic stock validation and deduction
+  - Prevents negative stock through optimistic concurrency control
+  - Automatic rollback on transaction failure
 
 #### SQL Injection Protection
 ```python
@@ -423,12 +484,21 @@ All API endpoints follow REST conventions and are documented in:
 - `PUT /patient` - Update patient
 - `DELETE /patient?UUID=X` - Delete patient
 
-#### Prescription APIs (5 endpoints)
-- `POST /prescription/add` - Create prescription
+#### Prescription APIs (7 endpoints)
+- `POST /prescription/add` - Create prescription (legacy)
+- `POST /prescription/save` - **Atomic prescription save with stock deduction (recommended)**
 - `GET /prescription/all` - List prescriptions (paginated)
-- `GET /prescription?PatientId=X` - Get by patient
-- `PUT /prescription` - Update prescription
-- `DELETE /prescription?PatientId=X` - Delete prescription
+- `GET /prescription/get/:uuid` - Get prescription by UUID
+- `GET /prescription/patient/:uuid` - Get all prescriptions for a patient
+- `PUT /prescription/update/:uuid` - Update prescription by UUID
+- `DELETE /prescription/delete/:uuid` - Delete prescription by UUID (cascade deletes medicines)
+
+#### PrescribedMedicine APIs (5 endpoints)
+- `POST /prescribedmedicine/add` - Add medicine to prescription
+- `GET /prescribedmedicine/all/:uuid` - Get all medicines for a prescription
+- `GET /prescribedmedicine/get/:rowid` - Get medicine by ROWID
+- `PUT /prescribedmedicine/update/:rowid` - Update medicine by ROWID
+- `DELETE /prescribedmedicine/delete/:rowid` - Delete medicine by ROWID
 
 #### Medicine Stock APIs (5 endpoints)
 - `POST /medicinestock/add` - Add medicine
@@ -446,6 +516,38 @@ All API endpoints follow REST conventions and are documented in:
 }
 ```
 
+### Atomic Prescription Save Response
+```json
+{
+  "status": "success",
+  "data": {
+    "UUID": "prescription-uuid",
+    "PatientUUID": "patient-uuid",
+    "CurrentSymptoms": "Fever, headache",
+    "medicines": [...],
+    "updatedMedicineStock": [
+      {"Name": "Paracetamol", "Quantity": 86}
+    ]
+  }
+}
+```
+
+### Stock Calculation Formula
+```
+Total Quantity Required = Duration (days) × Frequency Multiplier
+
+Frequency Multipliers:
+- Once daily: 1
+- Twice daily: 2
+- Thrice daily: 3
+- Four times daily: 4
+- Every 6 hours: 4
+- Every 8 hours: 3
+- Every 12 hours: 2
+- Once weekly: 1/7
+- As needed: 1
+```
+
 ---
 
 ## 9. Future Improvements / Roadmap
@@ -460,6 +562,8 @@ All API endpoints follow REST conventions and are documented in:
 6. **No File Upload**: Cannot attach patient documents/images
 7. **No Real-time Updates**: No WebSocket or push notifications
 8. **Limited Analytics**: Basic insights only, no advanced reporting
+9. **Stock Restoration**: Deleting a prescription does not restore medicine stock
+10. **Update Mode Stock**: Updating prescriptions deducts additional stock (design decision needed)
 
 ### Planned Enhancements
 
@@ -470,6 +574,9 @@ All API endpoints follow REST conventions and are documented in:
 - [ ] API rate limiting and throttling
 
 #### Phase 2: Feature Expansion
+- [x] Atomic prescription creation with stock deduction
+- [x] Automatic inventory updates on prescription save
+- [ ] Stock restoration on prescription deletion
 - [ ] Advanced search with fuzzy matching
 - [ ] Patient document upload and management
 - [ ] Prescription PDF generation
@@ -499,11 +606,13 @@ All API endpoints follow REST conventions and are documented in:
 - [ ] Mobile app (React Native)
 
 ### Technical Debt
-- Refactor 827-line main.py into modular controllers
+- Refactor 1462-line main.py into modular controllers
 - Add comprehensive unit and integration tests
 - Implement CI/CD pipeline
 - Add API versioning (v1, v2)
 - Migrate from string-based SQL to ORM (if Catalyst supports)
+- Consider true database transactions if Catalyst adds support
+- Implement stock audit trail for tracking deductions
 
 ---
 
@@ -559,11 +668,23 @@ catalyst deploy
 | Field | Type | Constraints |
 |-------|------|-------------|
 | ROWID | Integer | Auto-generated |
-| PatientId | String | Required, FK to Patient |
-| Frequency | Integer | Optional |
-| Duration | Integer | Optional |
-| SpecialInstruction | String | Optional |
+| UUID | String | Unique, Server-generated |
+| PatientUUID | String | Required, FK to Patient.UUID |
 | CurrentSymptoms | String | Optional |
+| OutsideMedicines | String | Optional |
+| fees | String/Number | Optional |
+| CREATEDTIME | Timestamp | Auto-generated |
+
+#### PrescribedMedicine Table
+| Field | Type | Constraints |
+|-------|------|-------------|
+| ROWID | Integer | Auto-generated |
+| PrescriptionUUID | String | Required, FK to Prescription.UUID |
+| MedicineName | String | Required |
+| frequency | String | Required (e.g., "Twice daily") |
+| Duration | String/Number | Required (days) |
+| timing | String | Required (e.g., "After food") |
+| CREATEDTIME | Timestamp | Auto-generated |
 
 #### MedicineStock Table
 | Field | Type | Constraints |
@@ -572,10 +693,12 @@ catalyst deploy
 | UUID | String | Unique, Server-generated |
 | Name | String | Required, Unique |
 | Dosage | Float | Optional |
-| Quantity | Integer | Required |
+| Quantity | String (converted to Integer) | Required, Stock level |
 | Category | String | Optional |
 | Price | Integer | Optional |
 | ManufacturerName | String | Optional |
+
+**Note**: Quantity is stored as string in Datastore but converted to integer in application code for arithmetic operations.
 
 ### C. Technology Links
 

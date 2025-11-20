@@ -7442,3 +7442,805 @@ src/pages/AddPrescriptionPage.jsx
 Search for the keywords to learn more about each warning.
 [info] [2025-11-20T07:04:11.541Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
 
+[info] [2025-11-20T12:27:58.784Z] : Shutting down server
+[debug] [2025-11-20T12:27:59.742Z] : Python child exit: 0, null
+[info] [2025-11-20T12:28:00.686Z] : 
+[info] [2025-11-20T12:28:00.743Z] : ✔ Shutdown complete
+[debug] [2025-11-20T12:28:00.762Z] : NO ERRORS REGISTERED
+[debug] [2025-11-20T12:28:00.804Z] : EXEC ENDED with event: serve, message: success
+[debug] [2025-11-20T12:28:00.811Z] : TOTAL DURATION OF COMMAND EXEC : 21487797
+[debug] [2025-11-20T12:28:01.551Z] : > refreshing access token <
+[debug] [2025-11-20T12:28:01.566Z] : >>>> HTTP REQUEST : POST https://accounts.zoho.in/oauth/v2/token 
+<request body omitted>
+
+[debug] [2025-11-20T12:28:07.680Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 12:28:07 GMT","content-type":"application/json;charset=UTF-8","content-length":"2419","connection":"keep-alive","cache-control":"no-store","x-content-type-options":"nosniff","pragma":"no-cache","x-frame-options":"SAMEORIGIN","vary":"accept-encoding","content-language":"en-US","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T12:28:07.874Z] : >>>> HTTP REQUEST : POST https://api.catalyst.zoho.in/baas/v1/cli/logs 
+<request body omitted>
+
+[debug] [2025-11-20T12:31:05.457Z] : 
+[debug] [2025-11-20T12:31:05.459Z] : ----------------------------------------------------------------------
+[debug] [2025-11-20T12:31:05.459Z] : Command:      /home/parth/.nvm/versions/node/v20.19.0/bin/node /home/parth/.nvm/versions/node/v20.19.0/bin/catalyst serve
+[debug] [2025-11-20T12:31:05.460Z] : CLI Version:  1.21.0
+[debug] [2025-11-20T12:31:05.460Z] : Platform:     linux
+[debug] [2025-11-20T12:31:05.460Z] : Node Version: v20.19.0
+[debug] [2025-11-20T12:31:05.460Z] : Time:         Thu Nov 20 2025 18:01:05 GMT+0530 (India Standard Time)
+[debug] [2025-11-20T12:31:05.461Z] : ----------------------------------------------------------------------
+[debug] [2025-11-20T12:31:05.461Z] : 
+[debug] [2025-11-20T12:31:06.770Z] : > authorizing via signed-in user option
+[debug] [2025-11-20T12:31:06.770Z] : > command requires scopes: ["ZohoCatalyst.projects.ALL","ZohoCatalyst.apigateway.apis.READ","ZohoCatalyst.apigateway.READ","ZohoCatalyst.segments.ALL","ZohoCatalyst.cache.READ","ZohoCatalyst.cache.CREATE","ZohoCatalyst.cache.DELETE","ZohoCatalyst.projects.ALL","ZohoCatalyst.cron.ALL","ZohoCatalyst.zcql.CREATE","ZohoCatalyst.projects.users.READ","ZohoCatalyst.projects.users.CREATE","ZohoCatalyst.projects.users.DELETE","ZohoCatalyst.projects.users.UPDATE","ZohoCatalyst.authentication.CREATE","ZohoCatalyst.email.CREATE","ZohoCatalyst.tables.ALL","ZohoCatalyst.tables.rows.ALL","ZohoCatalyst.tables.columns.ALL","ZohoCatalyst.tables.bulk.CREATE","ZohoCatalyst.tables.bulk.READ","ZohoCatalyst.folders.ALL","ZohoCatalyst.files.CREATE","ZohoCatalyst.files.READ","ZohoCatalyst.files.DELETE","ZohoCatalyst.functions.ALL","ZohoCatalyst.functions.EXECUTE","ZohoCatalyst.eventlistners.ALL","ZohoCatalyst.eventlisteners.produce","ZohoCatalyst.security.rules.Read","ZohoCatalyst.security.rules.Update","ZohoCatalyst.notifications.mobile","ZohoCatalyst.notifications.web","ZohoCatalyst.search.READ","ZohoCatalyst.mlkit.READ","QuickML.deployment.READ","ZohoCatalyst.pdfshot.execute","ZohoCatalyst.circuits.execution.DELETE","ZohoCatalyst.circuits.execution.READ","ZohoCatalyst.circuits.execute","ZohoCatalyst.appsail.Read","ZohoCatalyst.jobpool.READ","ZohoCatalyst.job.ALL","ZohoCatalyst.nosql.READ","ZohoCatalyst.nosql.rows.ALL"]
+[debug] [2025-11-20T12:31:06.781Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/22464000000011234 
+
+[debug] [2025-11-20T12:31:07.034Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 12:31:07 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T12:31:07.039Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/22464000000011234/environment 
+
+[debug] [2025-11-20T12:31:07.119Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 12:31:07 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T12:31:08.358Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/22464000000011234/function 
+Query params: {"type":"basicio,event,cron,applogic,integration,browser_logic,job"}
+
+[debug] [2025-11-20T12:31:09.510Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 12:31:08 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T12:31:09.512Z] : unknown eol undefined hence skipping check
+[info] [2025-11-20T12:31:36.749Z] : [react-plugin]: Starting the development server...
+
+[info] [2025-11-20T12:31:36.751Z] : 
+[info] [2025-11-20T12:31:36.751Z] : ℹ Client[drtrackerui]: Plugin : "zcatalyst-cli-plugin-react" is used for client serve
+[info] [2025-11-20T12:31:36.751Z] : 
+[debug] [2025-11-20T12:31:42.264Z] : ruok response: 200: OK
+[info] [2025-11-20T12:31:42.333Z] : 
+[info] [2025-11-20T12:31:42.333Z] :  >>>>>>>>>>>>> AdvancedIO <<<<<<<<<<<< 
+[info] [2025-11-20T12:31:42.334Z] : ℹ dr_tracker_function: http://localhost:3000/server/dr_tracker_function/
+[info] [2025-11-20T12:31:42.334Z] : 
+[info] [2025-11-20T12:31:42.334Z] : 
+[info] [2025-11-20T12:31:42.334Z] :  >>>>>>>>>>>>> Web Client <<<<<<<<<<<<
+[info] [2025-11-20T12:31:42.334Z] : ℹ client[drtrackerui]: http://localhost:3000/app/
+[info] [2025-11-20T12:31:42.335Z] : 
+[info] [2025-11-20T12:31:47.842Z] : [react-plugin]: Compiled successfully!
+[info] [2025-11-20T12:31:47.842Z] : [react-plugin]: 
+[info] [2025-11-20T12:31:47.842Z] : [react-plugin]: You can now view drtrackerui in the browser.
+[info] [2025-11-20T12:31:47.842Z] : [react-plugin]: 
+[info] [2025-11-20T12:31:47.842Z] : [react-plugin]:   Local:            http://localhost:3000/app/
+[info] [2025-11-20T12:31:47.842Z] : [react-plugin]:   On Your Network:  http://192.168.0.11:3000/app/
+[info] [2025-11-20T12:31:47.842Z] : [react-plugin]: 
+[info] [2025-11-20T12:31:47.842Z] : [react-plugin]: Note that the development build is not optimized.
+[info] [2025-11-20T12:31:47.843Z] : [react-plugin]: To create a production build, use npm run build.
+[info] [2025-11-20T12:31:47.843Z] : [react-plugin]: 
+[info] [2025-11-20T12:46:16.742Z] : 
+change of main.py in dr_tracker_function detected. Preparing your function, please wait...
+[debug] [2025-11-20T12:46:16.886Z] : Python child exit: 0, null
+[info] [2025-11-20T12:46:20.506Z] : ℹ AdvancedIO[dr_tracker_function]: ready!
+[info] [2025-11-20T12:46:20.507Z] : ℹ AdvancedIO[dr_tracker_function]: http://localhost:3000/server/dr_tracker_function/
+[debug] [2025-11-20T12:46:20.618Z] : ruok response: 200: OK
+[info] [2025-11-20T12:46:31.574Z] : 
+change of main.py in dr_tracker_function detected. Preparing your function, please wait...
+[debug] [2025-11-20T12:46:31.667Z] : Python child exit: 0, null
+[info] [2025-11-20T12:46:35.365Z] : ℹ AdvancedIO[dr_tracker_function]: ready!
+[info] [2025-11-20T12:46:35.365Z] : ℹ AdvancedIO[dr_tracker_function]: http://localhost:3000/server/dr_tracker_function/
+[debug] [2025-11-20T12:46:35.470Z] : ruok response: 200: OK
+[info] [2025-11-20T12:46:47.899Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:47:00.884Z] : [react-plugin]: Compiled successfully!
+[info] [2025-11-20T12:47:00.884Z] : [react-plugin]: 
+[info] [2025-11-20T12:47:00.884Z] : [react-plugin]: You can now view drtrackerui in the browser.
+[info] [2025-11-20T12:47:00.884Z] : [react-plugin]: 
+[info] [2025-11-20T12:47:00.884Z] : [react-plugin]:   Local:            http://localhost:3000/app/
+[info] [2025-11-20T12:47:00.885Z] : [react-plugin]:   On Your Network:  http://192.168.0.11:3000/app/
+[info] [2025-11-20T12:47:00.885Z] : [react-plugin]: 
+[info] [2025-11-20T12:47:00.885Z] : [react-plugin]: Note that the development build is not optimized.
+[info] [2025-11-20T12:47:00.885Z] : [react-plugin]: To create a production build, use npm run build.
+[info] [2025-11-20T12:47:00.885Z] : [react-plugin]: 
+[info] [2025-11-20T12:47:41.198Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:47:44.275Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T12:47:44.275Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:  'Form' is defined but never used                        no-unused-vars
+  Line 3:63:  'Select' is defined but never used                      no-unused-vars
+  Line 6:10:  'addPrescription' is defined but never used             no-unused-vars
+  Line 11:8:  'PatientMedicalRecordsModal' is defined but never used  no-unused-vars
+[info] [2025-11-20T12:47:44.275Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T12:47:44.275Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T12:47:49.970Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:47:50.732Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T12:47:50.733Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:   'Form' is defined but never used                             no-unused-vars
+  Line 3:63:   'Select' is defined but never used                           no-unused-vars
+  Line 6:10:   'addPrescription' is defined but never used                  no-unused-vars
+  Line 11:8:   'PatientMedicalRecordsModal' is defined but never used       no-unused-vars
+  Line 20:12:  'medicalRecordsOpen' is assigned a value but never used      no-unused-vars
+  Line 20:32:  'setMedicalRecordsOpen' is assigned a value but never used   no-unused-vars
+  Line 21:12:  'selectedPatientUUID' is assigned a value but never used     no-unused-vars
+  Line 21:33:  'setSelectedPatientUUID' is assigned a value but never used  no-unused-vars
+  Line 22:12:  'selectedPatientName' is assigned a value but never used     no-unused-vars
+  Line 22:33:  'setSelectedPatientName' is assigned a value but never used  no-unused-vars
+[info] [2025-11-20T12:47:50.733Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T12:47:50.733Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T12:47:58.612Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:47:59.452Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T12:47:59.452Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:   'Form' is defined but never used                                no-unused-vars
+  Line 3:63:   'Select' is defined but never used                              no-unused-vars
+  Line 6:10:   'addPrescription' is defined but never used                     no-unused-vars
+  Line 11:8:   'PatientMedicalRecordsModal' is defined but never used          no-unused-vars
+  Line 20:12:  'medicalRecordsOpen' is assigned a value but never used         no-unused-vars
+  Line 21:12:  'selectedPatientUUID' is assigned a value but never used        no-unused-vars
+  Line 22:12:  'selectedPatientName' is assigned a value but never used        no-unused-vars
+  Line 47:11:  'handleViewMedicalRecords' is assigned a value but never used   no-unused-vars
+  Line 53:11:  'handleCloseMedicalRecords' is assigned a value but never used  no-unused-vars
+[info] [2025-11-20T12:47:59.452Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T12:47:59.452Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T12:48:07.583Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:48:08.363Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T12:48:08.363Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:   'Form' is defined but never used                                no-unused-vars
+  Line 3:63:   'Select' is defined but never used                              no-unused-vars
+  Line 6:10:   'addPrescription' is defined but never used                     no-unused-vars
+  Line 11:8:   'PatientMedicalRecordsModal' is defined but never used          no-unused-vars
+  Line 20:12:  'medicalRecordsOpen' is assigned a value but never used         no-unused-vars
+  Line 21:12:  'selectedPatientUUID' is assigned a value but never used        no-unused-vars
+  Line 22:12:  'selectedPatientName' is assigned a value but never used        no-unused-vars
+  Line 53:11:  'handleCloseMedicalRecords' is assigned a value but never used  no-unused-vars
+[info] [2025-11-20T12:48:08.363Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T12:48:08.363Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T12:48:14.482Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:48:15.462Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T12:48:15.462Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:  'Form' is defined but never used             no-unused-vars
+  Line 3:63:  'Select' is defined but never used           no-unused-vars
+  Line 6:10:  'addPrescription' is defined but never used  no-unused-vars
+[info] [2025-11-20T12:48:15.462Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T12:48:15.462Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T12:48:25.731Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:48:26.825Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T12:48:26.825Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 14:8:   'PatientMedicalRecordsModal' is defined but never used                                                                 no-unused-vars
+  Line 39:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 41:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:  'Form' is defined but never used             no-unused-vars
+  Line 3:63:  'Select' is defined but never used           no-unused-vars
+  Line 6:10:  'addPrescription' is defined but never used  no-unused-vars
+[info] [2025-11-20T12:48:26.825Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T12:48:26.826Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T12:48:37.010Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:48:37.878Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T12:48:37.878Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 14:8:   'PatientMedicalRecordsModal' is defined but never used                                                                 no-unused-vars
+  Line 27:12:  'medicalRecordsOpen' is assigned a value but never used                                                                no-unused-vars
+  Line 27:32:  'setMedicalRecordsOpen' is assigned a value but never used                                                             no-unused-vars
+  Line 28:12:  'selectedPatientUUID' is assigned a value but never used                                                               no-unused-vars
+  Line 28:33:  'setSelectedPatientUUID' is assigned a value but never used                                                            no-unused-vars
+  Line 29:12:  'selectedPatientName' is assigned a value but never used                                                               no-unused-vars
+  Line 29:33:  'setSelectedPatientName' is assigned a value but never used                                                            no-unused-vars
+  Line 42:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 44:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:  'Form' is defined but never used             no-unused-vars
+  Line 3:63:  'Select' is defined but never used           no-unused-vars
+  Line 6:10:  'addPrescription' is defined but never used  no-unused-vars
+[info] [2025-11-20T12:48:37.878Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T12:48:37.878Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T12:48:46.429Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:48:47.350Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T12:48:47.350Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 14:8:   'PatientMedicalRecordsModal' is defined but never used                                                                 no-unused-vars
+  Line 27:12:  'medicalRecordsOpen' is assigned a value but never used                                                                no-unused-vars
+  Line 28:12:  'selectedPatientUUID' is assigned a value but never used                                                               no-unused-vars
+  Line 29:12:  'selectedPatientName' is assigned a value but never used                                                               no-unused-vars
+  Line 42:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 44:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+  Line 58:11:  'handleViewMedicalRecords' is assigned a value but never used                                                          no-unused-vars
+  Line 64:11:  'handleCloseMedicalRecords' is assigned a value but never used                                                         no-unused-vars
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:  'Form' is defined but never used             no-unused-vars
+  Line 3:63:  'Select' is defined but never used           no-unused-vars
+  Line 6:10:  'addPrescription' is defined but never used  no-unused-vars
+[info] [2025-11-20T12:48:47.350Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T12:48:47.350Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T12:49:00.094Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:49:00.981Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T12:49:00.982Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 14:8:   'PatientMedicalRecordsModal' is defined but never used                                                                 no-unused-vars
+  Line 27:12:  'medicalRecordsOpen' is assigned a value but never used                                                                no-unused-vars
+  Line 28:12:  'selectedPatientUUID' is assigned a value but never used                                                               no-unused-vars
+  Line 29:12:  'selectedPatientName' is assigned a value but never used                                                               no-unused-vars
+  Line 42:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 44:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+  Line 64:11:  'handleCloseMedicalRecords' is assigned a value but never used                                                         no-unused-vars
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:  'Form' is defined but never used             no-unused-vars
+  Line 3:63:  'Select' is defined but never used           no-unused-vars
+  Line 6:10:  'addPrescription' is defined but never used  no-unused-vars
+[info] [2025-11-20T12:49:00.983Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T12:49:00.983Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T12:49:08.354Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:49:09.647Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T12:49:09.647Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 42:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 44:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:  'Form' is defined but never used             no-unused-vars
+  Line 3:63:  'Select' is defined but never used           no-unused-vars
+  Line 6:10:  'addPrescription' is defined but never used  no-unused-vars
+[info] [2025-11-20T12:49:09.648Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T12:49:09.648Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T12:49:11.347Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:49:11.665Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T12:49:11.665Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 42:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 44:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:  'Form' is defined but never used             no-unused-vars
+  Line 3:63:  'Select' is defined but never used           no-unused-vars
+  Line 6:10:  'addPrescription' is defined but never used  no-unused-vars
+[info] [2025-11-20T12:49:11.665Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T12:49:11.666Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T12:51:47.594Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:51:48.463Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T12:51:48.463Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 42:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 44:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:  'Form' is defined but never used             no-unused-vars
+  Line 3:63:  'Select' is defined but never used           no-unused-vars
+  Line 6:10:  'addPrescription' is defined but never used  no-unused-vars
+[info] [2025-11-20T12:51:48.463Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T12:51:48.463Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T12:56:38.284Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:56:39.158Z] : [react-plugin]: Failed to compile.
+
+[info] [2025-11-20T12:56:39.159Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 186:16:  'Button' is not defined  react/jsx-no-undef
+  Line 189:16:  'Button' is not defined  react/jsx-no-undef
+
+Search for the keywords to learn more about each error.
+[info] [2025-11-20T12:56:50.734Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:56:51.424Z] : [react-plugin]: Failed to compile.
+
+[info] [2025-11-20T12:56:51.424Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 186:16:  'Button' is not defined  react/jsx-no-undef
+  Line 189:16:  'Button' is not defined  react/jsx-no-undef
+
+Search for the keywords to learn more about each error.
+[info] [2025-11-20T12:57:01.403Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T12:57:02.510Z] : [react-plugin]: Failed to compile.
+
+[info] [2025-11-20T12:57:02.511Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 186:16:  'Button' is not defined  react/jsx-no-undef
+  Line 189:16:  'Button' is not defined  react/jsx-no-undef
+
+Search for the keywords to learn more about each error.
+[info] [2025-11-20T12:58:42.875Z] : 
+change of main.py in dr_tracker_function detected. Preparing your function, please wait...
+[info] [2025-11-20T12:58:42.877Z] : [react-plugin]: Compiling...
+[debug] [2025-11-20T12:58:42.998Z] : Python child exit: 0, null
+[info] [2025-11-20T12:58:44.575Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T12:58:44.576Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 42:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 44:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:  'Form' is defined but never used             no-unused-vars
+  Line 3:63:  'Select' is defined but never used           no-unused-vars
+  Line 6:10:  'addPrescription' is defined but never used  no-unused-vars
+[info] [2025-11-20T12:58:44.576Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T12:58:44.576Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T12:58:46.527Z] : ℹ AdvancedIO[dr_tracker_function]: ready!
+[info] [2025-11-20T12:58:46.527Z] : ℹ AdvancedIO[dr_tracker_function]: http://localhost:3000/server/dr_tracker_function/
+[debug] [2025-11-20T12:58:46.635Z] : ruok response: 200: OK
+[info] [2025-11-20T13:03:05.021Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:03:06.101Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T13:03:06.101Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 42:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 44:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:  'Form' is defined but never used             no-unused-vars
+  Line 3:63:  'Select' is defined but never used           no-unused-vars
+  Line 6:10:  'addPrescription' is defined but never used  no-unused-vars
+[info] [2025-11-20T13:03:06.101Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T13:03:06.101Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T13:03:21.015Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:03:21.765Z] : [react-plugin]: Failed to compile.
+
+[info] [2025-11-20T13:03:21.765Z] : [react-plugin]: [eslint] 
+src/pages/PatientInsightsPage.jsx
+  Line 112:42:  'handleDeletePatient' is not defined  no-undef
+
+Search for the keywords to learn more about each error.
+[info] [2025-11-20T13:03:29.352Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:03:29.930Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T13:03:29.930Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 42:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 44:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:  'Form' is defined but never used             no-unused-vars
+  Line 3:63:  'Select' is defined but never used           no-unused-vars
+  Line 6:10:  'addPrescription' is defined but never used  no-unused-vars
+[info] [2025-11-20T13:03:29.930Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T13:03:29.930Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T13:03:41.073Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:03:41.702Z] : [react-plugin]: Failed to compile.
+
+[info] [2025-11-20T13:03:41.702Z] : [react-plugin]: SyntaxError: /home/parth/Desktop/New Folder/TESTDRTRACKER/drtrackerui/src/pages/OverviewPage.jsx: Unexpected token, expected "}" (414:32)
+  412 |             </Modal>
+  413 |     const handleCloseModal = useCallback(() => {
+> 414 |         setIsModalVisible(false);
+      |                                 ^
+  415 |         setSelectedPatient(null);
+  416 |         if (medicalRecordsOpen) {
+  417 |             setMedicalRecordsOpen(false);
+[info] [2025-11-20T13:04:22.877Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:04:24.067Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T13:04:24.067Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 42:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 44:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:  'Form' is defined but never used             no-unused-vars
+  Line 3:63:  'Select' is defined but never used           no-unused-vars
+  Line 6:10:  'addPrescription' is defined but never used  no-unused-vars
+[info] [2025-11-20T13:04:24.067Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T13:04:24.067Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T13:05:58.067Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:05:59.244Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T13:05:59.244Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 42:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 44:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+
+src/pages/PatientInsightsPage.jsx
+  Line 3:10:  'Form' is defined but never used             no-unused-vars
+  Line 3:63:  'Select' is defined but never used           no-unused-vars
+  Line 6:10:  'addPrescription' is defined but never used  no-unused-vars
+[info] [2025-11-20T13:05:59.244Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T13:05:59.244Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T13:12:33.719Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:12:35.146Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T13:12:35.146Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 42:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 44:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+[info] [2025-11-20T13:12:35.146Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T13:12:35.146Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T13:13:54.698Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:13:55.942Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T13:13:55.942Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 43:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 45:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+[info] [2025-11-20T13:13:55.942Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T13:13:55.942Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T13:16:06.099Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:16:06.752Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T13:16:06.752Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 43:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 45:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+[info] [2025-11-20T13:16:06.752Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T13:16:06.752Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T13:29:33.235Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:29:34.452Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T13:29:34.452Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/AddPrescriptionPage.jsx
+  Line 52:6:  React Hook useEffect has a missing dependency: 'loadPrescriptionData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 43:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 45:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+[info] [2025-11-20T13:29:34.452Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T13:29:34.452Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[debug] [2025-11-20T13:29:34.526Z] : > refreshing access token <
+[debug] [2025-11-20T13:29:34.528Z] : >>>> HTTP REQUEST : POST https://accounts.zoho.in/oauth/v2/token 
+<request body omitted>
+
+[debug] [2025-11-20T13:29:34.714Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 13:29:34 GMT","content-type":"application/json;charset=UTF-8","content-length":"2419","connection":"keep-alive","cache-control":"no-store","x-content-type-options":"nosniff","pragma":"no-cache","x-frame-options":"SAMEORIGIN","vary":"accept-encoding","content-language":"en-US","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[info] [2025-11-20T13:36:23.940Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:36:25.014Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T13:36:25.014Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/AddPrescriptionPage.jsx
+  Line 8:9:   'Text' is assigned a value but never used                                                                                no-unused-vars
+  Line 52:6:  React Hook useEffect has a missing dependency: 'loadPrescriptionData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 43:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 45:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+[info] [2025-11-20T13:36:25.014Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T13:36:25.014Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T13:37:03.614Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:37:04.643Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T13:37:04.643Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/AddPrescriptionPage.jsx
+  Line 52:6:  React Hook useEffect has a missing dependency: 'loadPrescriptionData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 43:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 45:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+[info] [2025-11-20T13:37:04.643Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T13:37:04.644Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T13:38:42.707Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:38:44.327Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T13:38:44.327Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/AddPrescriptionPage.jsx
+  Line 8:9:   'Text' is assigned a value but never used                                                                                no-unused-vars
+  Line 52:6:  React Hook useEffect has a missing dependency: 'loadPrescriptionData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 43:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 45:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+[info] [2025-11-20T13:38:44.327Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T13:38:44.328Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T13:39:10.348Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:39:10.948Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T13:39:10.948Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/AddPrescriptionPage.jsx
+  Line 8:9:   'Text' is assigned a value but never used                                                                                no-unused-vars
+  Line 52:6:  React Hook useEffect has a missing dependency: 'loadPrescriptionData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 43:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 45:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+[info] [2025-11-20T13:39:10.948Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T13:39:10.948Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T13:41:20.426Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:41:21.670Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T13:41:21.670Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/AddPrescriptionPage.jsx
+  Line 8:9:   'Text' is assigned a value but never used                                                                                no-unused-vars
+  Line 52:6:  React Hook useEffect has a missing dependency: 'loadPrescriptionData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 43:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 45:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+[info] [2025-11-20T13:41:21.670Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T13:41:21.670Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T13:41:31.573Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:41:32.050Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T13:41:32.050Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/AddPrescriptionPage.jsx
+  Line 8:9:   'Text' is assigned a value but never used                                                                                no-unused-vars
+  Line 52:6:  React Hook useEffect has a missing dependency: 'loadPrescriptionData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 43:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 45:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+[info] [2025-11-20T13:41:32.050Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T13:41:32.050Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T13:47:54.498Z] : 
+change of main.py in dr_tracker_function detected. Preparing your function, please wait...
+[debug] [2025-11-20T13:47:54.602Z] : Python child exit: 0, null
+[info] [2025-11-20T13:47:57.862Z] : ℹ AdvancedIO[dr_tracker_function]: ready!
+[info] [2025-11-20T13:47:57.863Z] : ℹ AdvancedIO[dr_tracker_function]: http://localhost:3000/server/dr_tracker_function/
+[debug] [2025-11-20T13:47:57.970Z] : ruok response: 200: OK
+[info] [2025-11-20T13:49:37.661Z] : 
+change of api_endpoints.md in dr_tracker_function detected. Preparing your function, please wait...
+[debug] [2025-11-20T13:49:37.706Z] : Python child exit: 0, null
+[info] [2025-11-20T13:49:40.311Z] : ℹ AdvancedIO[dr_tracker_function]: ready!
+[info] [2025-11-20T13:49:40.311Z] : ℹ AdvancedIO[dr_tracker_function]: http://localhost:3000/server/dr_tracker_function/
+[debug] [2025-11-20T13:49:40.415Z] : ruok response: 200: OK
+[info] [2025-11-20T13:50:01.243Z] : 
+change of api_endpoints.md in dr_tracker_function detected. Preparing your function, please wait...
+[debug] [2025-11-20T13:50:01.283Z] : Python child exit: 0, null
+[info] [2025-11-20T13:50:04.283Z] : ℹ AdvancedIO[dr_tracker_function]: ready!
+[info] [2025-11-20T13:50:04.283Z] : ℹ AdvancedIO[dr_tracker_function]: http://localhost:3000/server/dr_tracker_function/
+[debug] [2025-11-20T13:50:04.387Z] : ruok response: 200: OK
+[info] [2025-11-20T13:52:07.702Z] : 
+change of main.py in dr_tracker_function detected. Preparing your function, please wait...
+[debug] [2025-11-20T13:52:07.825Z] : Python child exit: 0, null
+[info] [2025-11-20T13:52:10.751Z] : ℹ AdvancedIO[dr_tracker_function]: ready!
+[info] [2025-11-20T13:52:10.751Z] : ℹ AdvancedIO[dr_tracker_function]: http://localhost:3000/server/dr_tracker_function/
+[debug] [2025-11-20T13:52:10.855Z] : ruok response: 200: OK
+[info] [2025-11-20T13:55:04.730Z] : [react-plugin]: Compiling...
+[info] [2025-11-20T13:55:06.184Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T13:55:06.184Z] : [react-plugin]: [eslint] 
+src/components/PatientMedicalRecordsModal.jsx
+  Line 19:6:  React Hook useEffect has a missing dependency: 'fetchMedicalRecords'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/AddPrescriptionPage.jsx
+  Line 8:9:   'Text' is assigned a value but never used                                                                                no-unused-vars
+  Line 52:6:  React Hook useEffect has a missing dependency: 'loadPrescriptionData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/OverviewPage.jsx
+  Line 43:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 45:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+[info] [2025-11-20T13:55:06.185Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T13:55:06.185Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T14:28:45.732Z] : Shutting down server
+[debug] [2025-11-20T14:28:45.818Z] : Python child exit: 0, null
+[info] [2025-11-20T14:28:45.856Z] : 
+[info] [2025-11-20T14:28:45.857Z] : ✔ Shutdown complete
+[debug] [2025-11-20T14:28:45.857Z] : NO ERRORS REGISTERED
+[debug] [2025-11-20T14:28:45.858Z] : EXEC ENDED with event: serve, message: success
+[debug] [2025-11-20T14:28:45.858Z] : TOTAL DURATION OF COMMAND EXEC : 7059096
+[debug] [2025-11-20T14:28:45.997Z] : >>>> HTTP REQUEST : POST https://api.catalyst.zoho.in/baas/v1/cli/logs 
+<request body omitted>
+
+[debug] [2025-11-20T14:28:46.207Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 14:28:46 GMT","content-length":"0","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T14:29:07.594Z] : 
+[debug] [2025-11-20T14:29:07.595Z] : ----------------------------------------------------------------------
+[debug] [2025-11-20T14:29:07.595Z] : Command:      /home/parth/.nvm/versions/node/v20.19.0/bin/node /home/parth/.nvm/versions/node/v20.19.0/bin/catalyst deploy
+[debug] [2025-11-20T14:29:07.595Z] : CLI Version:  1.21.0
+[debug] [2025-11-20T14:29:07.596Z] : Platform:     linux
+[debug] [2025-11-20T14:29:07.596Z] : Node Version: v20.19.0
+[debug] [2025-11-20T14:29:07.596Z] : Time:         Thu Nov 20 2025 19:59:07 GMT+0530 (India Standard Time)
+[debug] [2025-11-20T14:29:07.596Z] : ----------------------------------------------------------------------
+[debug] [2025-11-20T14:29:07.596Z] : 
+[debug] [2025-11-20T14:29:08.927Z] : > authorizing via signed-in user option
+[debug] [2025-11-20T14:29:08.927Z] : > command requires scopes: ["ZohoCatalyst.projects.ALL","ZohoCatalyst.functions.ALL","ZohoCatalyst.webapp.ALL","ZohoCatalyst.appsail.Update"]
+[debug] [2025-11-20T14:29:08.946Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/22464000000011234 
+
+[debug] [2025-11-20T14:29:09.128Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 14:29:09 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T14:29:09.130Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/22464000000011234/environment 
+
+[debug] [2025-11-20T14:29:09.179Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 14:29:09 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T14:29:09.220Z] : >>>> HTTP REQUEST : GET https://api.catalyst.zoho.in/baas/v1/project/22464000000011234/function 
+Query params: {"type":"basicio,event,cron,applogic,integration,browser_logic,job"}
+
+[debug] [2025-11-20T14:29:09.264Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 14:29:09 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T14:29:09.265Z] : unknown eol undefined hence skipping check
+[debug] [2025-11-20T14:29:16.222Z] : >>>> HTTP REQUEST : PUT https://api.catalyst.zoho.in/baas/v1/project/22464000000011234/server/upsert 
+
+[debug] [2025-11-20T14:29:23.444Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 14:29:23 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[info] [2025-11-20T14:29:24.860Z] : ℹ Plugin : "zcatalyst-cli-plugin-react" is used for client deploy
+[info] [2025-11-20T14:29:24.860Z] : ℹ Building Application...
+[info] [2025-11-20T14:29:40.077Z] : [react-plugin]: Creating an optimized production build...
+[info] [2025-11-20T14:30:58.778Z] : [react-plugin]: Compiled with warnings.
+
+[info] [2025-11-20T14:30:58.778Z] : [react-plugin]: [eslint] 
+src/pages/AddPrescriptionPage.jsx
+  Line 8:9:   'Text' is assigned a value but never used                                                                                no-unused-vars
+  Line 52:6:  React Hook useEffect has a missing dependency: 'loadPrescriptionData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+src/pages/MedicineStockPage.jsx
+  Line 15:33:  'error' is assigned a value but never used           no-unused-vars
+  Line 15:40:  'fetchMedicines' is assigned a value but never used  no-unused-vars
+
+src/pages/OverviewPage.jsx
+  Line 43:8:   React Hook useCallback has a missing dependency: 'prescriptionForm'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 45:11:  'handleSavePrescription' is assigned a value but never used                                                            no-unused-vars
+[info] [2025-11-20T14:30:58.778Z] : [react-plugin]: 
+Search for the keywords to learn more about each warning.
+[info] [2025-11-20T14:30:58.778Z] : [react-plugin]: To ignore, add // eslint-disable-next-line to the line before.
+
+[info] [2025-11-20T14:30:58.778Z] : [react-plugin]: File sizes after gzip:
+
+[info] [2025-11-20T14:30:58.836Z] : [react-plugin]:   399.26 kB  build/static/js/main.ed5bbe6e.js
+[info] [2025-11-20T14:30:58.836Z] : [react-plugin]:   1.66 kB    build/static/js/453.aaefbd9b.chunk.js
+[info] [2025-11-20T14:30:58.836Z] : [react-plugin]:   1.59 kB    build/static/css/main.eadf659f.css
+[info] [2025-11-20T14:30:58.836Z] : [react-plugin]:  
+[debug] [2025-11-20T14:31:00.891Z] : > refreshing access token <
+[debug] [2025-11-20T14:31:00.892Z] : >>>> HTTP REQUEST : POST https://accounts.zoho.in/oauth/v2/token 
+<request body omitted>
+
+[debug] [2025-11-20T14:31:01.083Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 14:31:01 GMT","content-type":"application/json;charset=UTF-8","content-length":"2419","connection":"keep-alive","cache-control":"no-store","x-content-type-options":"nosniff","pragma":"no-cache","x-frame-options":"SAMEORIGIN","vary":"accept-encoding","content-language":"en-US","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[debug] [2025-11-20T14:31:01.149Z] : >>>> HTTP REQUEST : POST https://api.catalyst.zoho.in/baas/v1/project/22464000000011234/webapp 
+
+[debug] [2025-11-20T14:31:03.073Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 14:31:03 GMT","content-type":"application/vnd.catalyst.v2+json","transfer-encoding":"chunked","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
+[info] [2025-11-20T14:31:03.075Z] : 
+[info] [2025-11-20T14:31:03.075Z] : ℹ functions(dr_tracker_function): URL => https://drtracker-60055619041.development.catalystserverless.in/server/dr_tracker_function/
+[info] [2025-11-20T14:31:03.075Z] : ✔ functions(dr_tracker_function): deploy successful
+[info] [2025-11-20T14:31:03.075Z] : 
+[info] [2025-11-20T14:31:03.075Z] : ✔ client: deploy successful
+[info] [2025-11-20T14:31:03.075Z] : ℹ client: URL => https://drtracker-60055619041.development.catalystserverless.in/app/index.html
+[info] [2025-11-20T14:31:03.075Z] : 
+[info] [2025-11-20T14:31:03.075Z] : ✔ Catalyst deploy complete!
+[debug] [2025-11-20T14:31:03.076Z] : NO ERRORS REGISTERED
+[debug] [2025-11-20T14:31:03.076Z] : EXEC ENDED with event: deploy, message: success
+[debug] [2025-11-20T14:31:03.076Z] : TOTAL DURATION OF COMMAND EXEC : 114174
+[debug] [2025-11-20T14:31:03.081Z] : >>>> HTTP REQUEST : POST https://api.catalyst.zoho.in/baas/v1/cli/logs 
+<request body omitted>
+
+[debug] [2025-11-20T14:31:03.144Z] : <<<< HTTP RESPONSE : 200
+Response Headers: {"server":"ZGS","date":"Thu, 20 Nov 2025 14:31:03 GMT","content-length":"0","connection":"keep-alive","x-content-type-options":"nosniff","cache-control":"private,no-cache,no-store,max-age=0,must-revalidate","pragma":"no-cache","expires":"Thu, 01 Jan 1970 00:00:00 GMT","x-frame-options":"DENY","strict-transport-security":"max-age=64072000; includeSubDomains; preload"}
+
