@@ -105,8 +105,10 @@ The application addresses the critical need for digitizing healthcare records, r
 | **React** | 19.2.0 | Modern, component-based UI library for building interactive SPAs |
 | **React Router DOM** | 7.9.5 | Client-side routing for seamless navigation without page reloads |
 | **Ant Design** | 5.28.0 | Enterprise-grade UI component library with rich table, form, and layout components |
+| **@ant-design/icons** | 6.1.0 | Official icon library for Ant Design components |
 | **Axios** | 1.13.2 | Promise-based HTTP client for clean API communication |
 | **React Scripts** | 5.0.1 | Zero-configuration tooling for building and testing |
+| **zcatalyst-cli-plugin-react** | 0.0.4 | Catalyst CLI plugin for React deployment |
 
 ### Backend Technologies
 
@@ -149,42 +151,43 @@ TESTDRTRACKER/
 │   │
 │   ├── src/                              # Source code directory
 │   │   ├── components/                   # Reusable UI components
-│   │   │   ├── AddPatientForm.jsx        # Patient creation form with validation
-│   │   │   ├── HeaderBar.jsx             # Top navigation bar with theme toggle
-│   │   │   ├── MedicineTable.jsx         # Medicine inventory table with CRUD
-│   │   │   ├── PatientTable.jsx          # Patient listing table with actions
-│   │   │   ├── Sidebar.jsx               # Left navigation menu
-│   │   │   ├── ThemeCustomizer.jsx       # Theme color/radius customization panel
-│   │   │   └── patientTableColumns.js    # Ant Design table column definitions
+│   │   │   ├── AddPatientForm.jsx        # Patient creation form with validation (6.9KB)
+│   │   │   ├── HeaderBar.jsx             # Top navigation bar with theme toggle (1.7KB)
+│   │   │   ├── MedicineTable.jsx         # Medicine inventory table with CRUD (0.9KB)
+│   │   │   ├── PatientMedicalRecordsModal.jsx # Modal for viewing patient prescriptions (6.5KB)
+│   │   │   ├── PatientTable.jsx          # Patient listing table with actions (0.9KB)
+│   │   │   ├── Sidebar.jsx               # Left navigation menu (2.2KB)
+│   │   │   ├── ThemeCustomizer.jsx       # Theme color/radius customization panel (3.9KB)
+│   │   │   └── patientTableColumns.js    # Ant Design table column definitions (1.6KB)
 │   │   │
 │   │   ├── context/                      # React Context Providers
-│   │   │   ├── MedicineContext.jsx       # Medicine state + API integration
-│   │   │   └── PatientContext.jsx        # Patient state + API integration
+│   │   │   ├── MedicineContext.jsx       # Medicine state + API integration (4.2KB)
+│   │   │   └── PatientContext.jsx        # Patient state + API integration (3.5KB)
 │   │   │
 │   │   ├── hooks/                        # Custom React hooks
-│   │   │   └── useDataManagement.js      # Shared data management logic
+│   │   │   └── useDataManagement.js      # Shared data management logic (1.7KB)
 │   │   │
 │   │   ├── pages/                        # Route-level page components
-│   │   │   ├── AddPrescriptionPage.jsx   # Prescription creation interface
-│   │   │   ├── PatientInsightsPage.jsx   # Analytics and insights dashboard
-│   │   │   ├── PatientsPage.jsx          # Patient management view
-│   │   │   ├── OverviewPage.jsx          # Main dashboard/overview
-│   │   │   └── MedicineStockPage.jsx     # Medicine inventory management
+│   │   │   ├── AddPrescriptionPage.jsx   # Prescription creation interface (18.9KB)
+│   │   │   ├── PatientInsightsPage.jsx   # Analytics and insights dashboard (15.8KB)
+│   │   │   ├── PatientsPage.jsx          # Patient management view (0.7KB)
+│   │   │   ├── OverviewPage.jsx          # Main dashboard/overview (29.3KB)
+│   │   │   └── MedicineStockPage.jsx     # Medicine inventory management (25.8KB)
 │   │   │
 │   │   ├── utils/                        # Utility functions and API clients
-│   │   │   ├── medicineApi.js            # Medicine API calls (axios)
-│   │   │   ├── patientApi.js             # Patient API calls (axios)
-│   │   │   ├── prescriptionApi.js        # Prescription API calls (axios)
-│   │   │   └── validation.js             # Form validation utilities
+│   │   │   ├── medicineApi.js            # Medicine API calls (axios) (0.9KB)
+│   │   │   ├── patientApi.js             # Patient API calls (axios) (0.8KB)
+│   │   │   ├── prescriptionApi.js        # Prescription API calls (axios) (1.6KB)
+│   │   │   └── validation.js             # Form validation utilities (1.9KB)
 │   │   │
 │   │   ├── App.css                       # Application-level styles
-│   │   ├── App.js                        # Main app component with routing
+│   │   ├── App.js                        # Main app component with routing (83 lines)
 │   │   ├── App.test.js                   # App component tests
 │   │   ├── index.css                     # Global CSS styles
-│   │   ├── index.js                      # React app entry point with providers
+│   │   ├── index.js                      # React app entry point with providers (27 lines)
 │   │   ├── reportWebVitals.js            # Performance monitoring
 │   │   ├── setupTests.js                 # Jest test configuration
-│   │   └── themeContext.js               # Theme state management context
+│   │   └── themeContext.js               # Theme state management with localStorage (49 lines)
 │   │
 │   ├── README.md                         # Frontend documentation
 │   ├── client-package.json               # Alternative package config
@@ -192,8 +195,9 @@ TESTDRTRACKER/
 │
 ├── functions/                            # Backend serverless functions
 │   └── dr_tracker_function/             # Main API function
-│       ├── main.py                       # Flask handlers for all endpoints (1462 lines)
-│       ├── api_endpoints.md              # API documentation with atomic prescription details
+│       ├── main.py                       # Flask handlers for all endpoints (1461 lines)
+│       ├── api_endpoints.md              # Basic API documentation (legacy)
+│       ├── NEW_API_ENDPOINTS.md          # Comprehensive UUID-based API documentation
 │       ├── catalyst-config.json          # Function deployment config
 │       └── requirements.txt              # Python dependencies
 │
@@ -259,25 +263,31 @@ prescriptionApi.savePrescription() [Axios POST]
     ↓
 Backend: _save_prescription_atomic(request, app)
     ↓
-STEP 1: Validate Patient exists
+STEP 1: Validate Patient exists by PatientUUID
     ↓
 STEP 2: For each medicine:
     • Calculate total_required = Duration × Frequency_Multiplier
-    • Query MedicineStock for current quantity
+    • Query MedicineStock by Name for current quantity
     • Validate: current_quantity >= total_required
-    • If insufficient → ABORT with 409 error
+    • If medicine not found → ABORT with 409 error
+    • If insufficient stock → ABORT with 409 error
     ↓
 STEP 3: Create/Update Prescription record
+    • CREATE mode: Generate new UUID, insert row
+    • UPDATE mode: Update existing prescription by UUID
     ↓
-STEP 4: Delete removed medicines (update mode)
+STEP 4: Delete removed medicines (update mode only)
+    • Delete rows from PrescribedMedicine table by ROWID
     ↓
 STEP 5: Deduct stock atomically:
     • For each medicine: new_qty = current_qty - total_required
     • Verify new_qty >= 0 (race condition check)
-    • UPDATE MedicineStock.Quantity
-    • Track for rollback
+    • UPDATE MedicineStock.Quantity by UUID
+    • Track stock changes for rollback
     ↓
-STEP 6: Save PrescribedMedicine records
+STEP 6: Save/Update PrescribedMedicine records
+    • UPDATE mode: Update existing medicine by ROWID
+    • CREATE mode: Insert new medicine with PrescriptionUUID
     ↓
 Success Response with updated stock
     ↓
@@ -286,10 +296,10 @@ Frontend: fetchMedicines() [Refresh Inventory]
 UI Update with new stock quantities
 
 ON ERROR → ROLLBACK:
-    • Restore all stock quantities
+    • Restore all stock quantities to original values
     • Delete created prescription (CREATE mode)
     • Delete created medicine records (CREATE mode)
-    • Return error response
+    • Return detailed error response with HTTP 409/400/500
 ```
 
 ### Architectural Patterns
@@ -473,7 +483,8 @@ The application currently lacks:
 ### RESTful Endpoint Structure
 
 All API endpoints follow REST conventions and are documented in:
-📄 `functions/dr_tracker_function/api_endpoints.md`
+📄 **Primary:** `functions/dr_tracker_function/NEW_API_ENDPOINTS.md` (Comprehensive UUID-based API documentation - 661 lines)
+📄 **Legacy:** `functions/dr_tracker_function/api_endpoints.md` (Basic API documentation - 204 lines)
 
 ### Endpoint Categories
 
@@ -489,13 +500,13 @@ All API endpoints follow REST conventions and are documented in:
 - `POST /prescription/save` - **Atomic prescription save with stock deduction (recommended)**
 - `GET /prescription/all` - List prescriptions (paginated)
 - `GET /prescription/get/:uuid` - Get prescription by UUID
-- `GET /prescription/patient/:uuid` - Get all prescriptions for a patient
-- `PUT /prescription/update/:uuid` - Update prescription by UUID
+- `GET /prescription/patient/:patientUUID` - Get all prescriptions for a patient with medicines
+- `PUT /prescription/update/:uuid` - Update prescription by UUID (legacy)
 - `DELETE /prescription/delete/:uuid` - Delete prescription by UUID (cascade deletes medicines)
 
 #### PrescribedMedicine APIs (5 endpoints)
 - `POST /prescribedmedicine/add` - Add medicine to prescription
-- `GET /prescribedmedicine/all/:uuid` - Get all medicines for a prescription
+- `GET /prescribedmedicine/all/:prescriptionUUID` - Get all medicines for a prescription
 - `GET /prescribedmedicine/get/:rowid` - Get medicine by ROWID
 - `PUT /prescribedmedicine/update/:rowid` - Update medicine by ROWID
 - `DELETE /prescribedmedicine/delete/:rowid` - Delete medicine by ROWID
@@ -557,13 +568,17 @@ Frequency Multipliers:
 1. **No Authentication**: Anyone with access can view/modify all records
 2. **No Multi-tenancy**: Single database for all users
 3. **Limited Error Handling**: No retry mechanisms or circuit breakers
-4. **No Audit Logging**: No tracking of who made changes
-5. **No Search Functionality**: Only supports exact match queries
+4. **No Audit Logging**: No tracking of who made changes and when
+5. **No Search Functionality**: Only supports exact match queries and pagination
 6. **No File Upload**: Cannot attach patient documents/images
 7. **No Real-time Updates**: No WebSocket or push notifications
 8. **Limited Analytics**: Basic insights only, no advanced reporting
 9. **Stock Restoration**: Deleting a prescription does not restore medicine stock
-10. **Update Mode Stock**: Updating prescriptions deducts additional stock (design decision needed)
+10. **Update Mode Stock**: Updating prescriptions deducts additional stock without restoring previous allocation
+11. **No Transaction Support**: Catalyst Datastore doesn't support true ACID transactions (using optimistic concurrency control)
+12. **No Data Export**: No built-in functionality to export data to CSV/Excel/PDF
+13. **No Batch Operations**: All operations are single-record based
+14. **No Medicine Expiry Tracking**: No date-based inventory management
 
 ### Planned Enhancements
 
@@ -606,13 +621,21 @@ Frequency Multipliers:
 - [ ] Mobile app (React Native)
 
 ### Technical Debt
-- Refactor 1462-line main.py into modular controllers
+- Refactor 1461-line main.py into modular controllers/services
 - Add comprehensive unit and integration tests
-- Implement CI/CD pipeline
-- Add API versioning (v1, v2)
-- Migrate from string-based SQL to ORM (if Catalyst supports)
-- Consider true database transactions if Catalyst adds support
-- Implement stock audit trail for tracking deductions
+- Implement CI/CD pipeline with automated testing
+- Add API versioning (v1, v2) for backward compatibility
+- Migrate from string-based ZCQL to ORM (if Catalyst supports)
+- Implement proper database transactions when Catalyst adds support
+- Add stock audit trail table for tracking all deductions/additions
+- Improve error messages with more context and debugging info
+- Add request validation middleware
+- Implement rate limiting and request throttling
+- Add comprehensive logging with log levels and structured logging
+- Optimize ZCQL queries with proper indexing strategy
+- Add frontend error boundaries for better error handling
+- Implement proper loading states across all components
+- Add e2e testing with Cypress or Playwright
 
 ---
 
@@ -621,7 +644,7 @@ Frequency Multipliers:
 ### A. Environment Setup
 
 #### Prerequisites
-- Node.js 14+ and npm
+- Node.js 16+ and npm
 - Python 3.9+
 - Zoho Catalyst CLI
 
@@ -629,7 +652,7 @@ Frequency Multipliers:
 ```bash
 cd drtrackerui
 npm install
-npm start  # Runs on http://localhost:3000
+npm start  # Runs on http://localhost:3000 (development)
 ```
 
 #### Backend Setup
@@ -644,6 +667,14 @@ catalyst deploy
 ```bash
 catalyst deploy
 # Deploys both frontend and backend to Catalyst cloud
+# Frontend deploys using zcatalyst-cli-plugin-react
+# Backend deploys as Advanced I/O function
+```
+
+#### Local Development
+```bash
+# Backend runs on: http://localhost:3000/server/dr_tracker_function
+# Frontend proxies API requests to backend during development
 ```
 
 ### B. Database Schema
@@ -703,17 +734,21 @@ catalyst deploy
 ### C. Technology Links
 
 - [React Documentation](https://react.dev)
+- [React Router DOM](https://reactrouter.com)
 - [Ant Design Components](https://ant.design)
+- [Ant Design Icons](https://ant.design/components/icon)
 - [Zoho Catalyst Platform](https://catalyst.zoho.com)
+- [Zoho Catalyst SDK](https://docs.catalyst.zoho.com/en/sdk/python/)
 - [Flask Documentation](https://flask.palletsprojects.com)
 - [Axios Documentation](https://axios-http.com)
 
 ### D. Configuration Files
 
-- **catalyst.json**: Project-level Catalyst configuration
-- **catalyst-config.json**: Function-level runtime configuration
-- **package.json**: Frontend dependencies and scripts
-- **requirements.txt**: Python backend dependencies
+- **catalyst.json**: Project-level Catalyst configuration (defines frontend source and backend functions)
+- **catalyst-config.json**: Function-level runtime configuration (Python 3.9 runtime)
+- **package.json**: Frontend dependencies and npm scripts (build, start, test)
+- **client-package.json**: Alternative frontend package configuration
+- **requirements.txt**: Python backend dependencies (zcatalyst-sdk==1.0.2)
 
 ### E. Development Guidelines
 
@@ -730,6 +765,6 @@ catalyst deploy
 ---
 
 **Document Version**: 1.0  
-**Last Updated**: November 2024  
+**Last Updated**: November 2024 (Revised November 29, 2025)  
 **Maintained By**: Development Team  
-**For Questions**: Refer to API documentation or contact system administrator
+**For Questions**: Refer to NEW_API_ENDPOINTS.md or contact system administrator

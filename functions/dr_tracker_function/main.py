@@ -77,7 +77,20 @@ def _create_patient(request: Request, app):
     row_id = None
     if isinstance(row, dict):
         row_id = row.get('ROWID') or row.get('id') or row.get('Id') or row.get('ROW_ID')
-    patient = {'patientId': row_id or phone, 'Name': name, 'uuid': patient_uuid}
+    patient = {
+        'patientId': row_id or phone, 
+        'Name': name, 
+        'UUID': patient_uuid,
+        'Gender': gender,
+        'Age': age,
+        'Profession': profession,
+        'Weight': weight,
+        'Height': height,
+        'Phonenumber': phone,
+        'MedicialHistory': medical_history,
+        'AdharNumber': adhar_number if adhar_number else None,
+        'Address': address
+    }
     response_data = {
         'status': 'success',
         'data': {
@@ -190,44 +203,167 @@ def _get_patient_by_phone(request: Request, app):
         return make_response(jsonify({'status': 'failure', 'error': 'Failed to fetch patient'}), 500)
 
 
-def _delete_patient(request: Request, app):
-    uuid = request.args.get('UUID') or request.args.get('uuid')
-    datastore_service = app.datastore()
-    table_service = datastore_service.table("Patient")
-    if uuid:
+def _delete_prescription_cascade_internal(app, zcql, prescription_uuid):
+    """Internal helper to delete a prescription and cascade delete all linked PrescribedMedicine entries.
+    
+    Args:
+        app: Catalyst SDK app instance
+        zcql: ZCQL service instance
+        prescription_uuid: UUID of the prescription to delete
+    
+    Returns:
+        dict: {'success': bool, 'deletedPrescriptionRowIds': [], 'deletedMedicineRowIds': [], 'error': str}
+    """
+    try:
+        safe_uuid = str(prescription_uuid).replace("'", "\\'")
+        
+        # Find the prescription ROWID
+        rows = zcql.execute_query(f"SELECT ROWID FROM Prescription WHERE UUID = '{safe_uuid}'")
+        row_ids = []
+        for r in rows or []:
+            if isinstance(r, dict) and len(r) == 1 and list(r.keys())[0] == 'Prescription':
+                inner = list(r.values())[0]
+                rid = inner.get('ROWID') or inner.get('id') or inner.get('Id')
+            else:
+                rid = r.get('ROWID') if isinstance(r, dict) else None
+            if rid:
+                row_ids.append(rid)
+        
+        if not row_ids:
+            return {'success': False, 'error': f'No prescription found with UUID {prescription_uuid}'}
+        
+        # Cascade delete: First delete all PrescribedMedicine entries linked to this prescription
+        deleted_meds = []
         try:
-            zcql = app.zcql()
-            safe_uuid = str(uuid).replace("'", "\\'")
-            rows = zcql.execute_query(f"SELECT ROWID FROM Patient WHERE UUID = '{safe_uuid}'")
-            row_ids = []
-            for r in rows or []:
-                if isinstance(r, dict) and len(r) == 1 and list(r.keys())[0] == 'Patient':
-                    inner = list(r.values())[0]
-                    rid = inner.get('ROWID') or inner.get('id') or inner.get('Id')
+            prescribed_meds = zcql.execute_query(f"SELECT ROWID FROM PrescribedMedicine WHERE PrescriptionUUID = '{safe_uuid}'")
+            prescribed_med_table = app.datastore().table('PrescribedMedicine')
+            for pm in prescribed_meds or []:
+                if isinstance(pm, dict) and len(pm) == 1 and list(pm.keys())[0] == 'PrescribedMedicine':
+                    inner = list(pm.values())[0]
+                    pm_rid = inner.get('ROWID') or inner.get('id') or inner.get('Id')
                 else:
-                    rid = r.get('ROWID') if isinstance(r, dict) else None
-                if rid:
-                    row_ids.append(rid)
-            if not row_ids:
-                return make_response(jsonify({'status': 'failure', 'error': 'No patient found with that UUID'}), 404)
-            deleted = []
-            for rid in row_ids:
-                try:
-                    table_service.delete_row(rid)
-                    deleted.append(rid)
-                except Exception:
-                    logger.exception('Failed to delete row %s', rid)
-            resp = {'status': 'success', 'data': {'deletedRowIds': deleted}}
-            return make_response(jsonify(resp), 200)
+                    pm_rid = pm.get('ROWID') if isinstance(pm, dict) else None
+                if pm_rid:
+                    try:
+                        prescribed_med_table.delete_row(pm_rid)
+                        deleted_meds.append(pm_rid)
+                    except Exception:
+                        logger.exception('Failed to delete PrescribedMedicine %s', pm_rid)
         except Exception:
-            logger.exception('Failed to delete by UUID')
-            return make_response(jsonify({'status': 'failure', 'error': 'Failed to delete patient(s)'}), 500)
-    else:
-        message = {
+            logger.exception('Failed to cascade delete PrescribedMedicine entries')
+        
+        # Now delete the prescription itself
+        datastore_service = app.datastore()
+        table_service = datastore_service.table('Prescription')
+        deleted_prescriptions = []
+        for rid in row_ids:
+            try:
+                table_service.delete_row(rid)
+                deleted_prescriptions.append(rid)
+            except Exception:
+                logger.exception('Failed to delete prescription %s', rid)
+        
+        return {
+            'success': True,
+            'deletedPrescriptionRowIds': deleted_prescriptions,
+            'deletedMedicineRowIds': deleted_meds
+        }
+    except Exception as e:
+        logger.exception('Failed to delete prescription cascade internal')
+        return {'success': False, 'error': str(e)}
+
+
+def _delete_patient(request: Request, app):
+    """Delete patient by UUID with cascade delete of all prescriptions and their medicines."""
+    uuid = request.args.get('UUID') or request.args.get('uuid')
+    if not uuid:
+        return make_response(jsonify({
             'status': 'failure',
             'error': 'Please provide UUID query param to delete patient.'
+        }), 400)
+    
+    try:
+        zcql = app.zcql()
+        safe_uuid = str(uuid).replace("'", "\\'")
+        
+        # Step 1: Validate that the patient exists
+        patient_rows = zcql.execute_query(f"SELECT ROWID FROM Patient WHERE UUID = '{safe_uuid}'")
+        patient_row_ids = []
+        for r in patient_rows or []:
+            if isinstance(r, dict) and len(r) == 1 and list(r.keys())[0] == 'Patient':
+                inner = list(r.values())[0]
+                rid = inner.get('ROWID') or inner.get('id') or inner.get('Id')
+            else:
+                rid = r.get('ROWID') if isinstance(r, dict) else None
+            if rid:
+                patient_row_ids.append(rid)
+        
+        if not patient_row_ids:
+            return make_response(jsonify({
+                'status': 'failure',
+                'error': 'No patient found with that UUID'
+            }), 404)
+        
+        # Step 2: Find all prescriptions for this patient
+        prescription_query = zcql.execute_query(f"SELECT UUID FROM Prescription WHERE PatientUUID = '{safe_uuid}'")
+        prescription_uuids = []
+        for item in prescription_query or []:
+            if isinstance(item, dict) and len(item) == 1 and list(item.keys())[0] == 'Prescription':
+                prescription_row = list(item.values())[0]
+            else:
+                prescription_row = item
+            
+            p_uuid = prescription_row.get('UUID')
+            if p_uuid:
+                prescription_uuids.append(p_uuid)
+        
+        # Step 3: Delete all prescriptions (and their medicines) using cascade delete
+        deleted_prescriptions = []
+        failed_prescriptions = []
+        for p_uuid in prescription_uuids:
+            result = _delete_prescription_cascade_internal(app, zcql, p_uuid)
+            if result['success']:
+                deleted_prescriptions.append(p_uuid)
+            else:
+                failed_prescriptions.append({'uuid': p_uuid, 'error': result.get('error', 'Unknown error')})
+                logger.error(f"Failed to delete prescription {p_uuid}: {result.get('error')}")
+        
+        # Step 4: If any prescription deletion failed, do not delete the patient
+        if failed_prescriptions:
+            return make_response(jsonify({
+                'status': 'failure',
+                'error': 'Failed to delete one or more prescriptions. Patient not deleted.',
+                'failedPrescriptions': failed_prescriptions
+            }), 500)
+        
+        # Step 5: Delete the patient record
+        datastore_service = app.datastore()
+        patient_table = datastore_service.table('Patient')
+        deleted_patient_rows = []
+        for rid in patient_row_ids:
+            try:
+                patient_table.delete_row(rid)
+                deleted_patient_rows.append(rid)
+            except Exception:
+                logger.exception('Failed to delete patient row %s', rid)
+        
+        # Return success response
+        resp = {
+            'status': 'success',
+            'data': {
+                'deletedPatientUUID': uuid,
+                'deletedPatientRowIds': deleted_patient_rows,
+                'deletedPrescriptions': deleted_prescriptions
+            }
         }
-        return make_response(jsonify(message), 400)
+        return make_response(jsonify(resp), 200)
+    
+    except Exception:
+        logger.exception('Failed to delete patient by UUID')
+        return make_response(jsonify({
+            'status': 'failure',
+            'error': 'Failed to delete patient'
+        }), 500)
 
 
 def _create_prescription(request: Request, app):
@@ -366,57 +502,21 @@ def _delete_prescription(request: Request, app, uuid):
     """Delete prescription by UUID and cascade delete all linked PrescribedMedicine entries."""
     if not uuid:
         return make_response(jsonify({'status': 'failure', 'error': 'Missing UUID parameter'}), 400)
+    
     try:
         zcql = app.zcql()
-        safe_uuid = str(uuid).replace("'", "\\'")
+        result = _delete_prescription_cascade_internal(app, zcql, uuid)
         
-        # Find the prescription ROWID
-        rows = zcql.execute_query(f"SELECT ROWID FROM Prescription WHERE UUID = '{safe_uuid}'")
-        row_ids = []
-        for r in rows or []:
-            if isinstance(r, dict) and len(r) == 1 and list(r.keys())[0] == 'Prescription':
-                inner = list(r.values())[0]
-                rid = inner.get('ROWID') or inner.get('id') or inner.get('Id')
-            else:
-                rid = r.get('ROWID') if isinstance(r, dict) else None
-            if rid:
-                row_ids.append(rid)
-        
-        if not row_ids:
-            return make_response(jsonify({'status': 'failure', 'error': 'No prescription found with that UUID'}), 404)
-        
-        # Cascade delete: First delete all PrescribedMedicine entries linked to this prescription
-        try:
-            prescribed_meds = zcql.execute_query(f"SELECT ROWID FROM PrescribedMedicine WHERE PrescriptionUUID = '{safe_uuid}'")
-            prescribed_med_table = app.datastore().table('PrescribedMedicine')
-            deleted_meds = []
-            for pm in prescribed_meds or []:
-                if isinstance(pm, dict) and len(pm) == 1 and list(pm.keys())[0] == 'PrescribedMedicine':
-                    inner = list(pm.values())[0]
-                    pm_rid = inner.get('ROWID') or inner.get('id') or inner.get('Id')
-                else:
-                    pm_rid = pm.get('ROWID') if isinstance(pm, dict) else None
-                if pm_rid:
-                    try:
-                        prescribed_med_table.delete_row(pm_rid)
-                        deleted_meds.append(pm_rid)
-                    except Exception:
-                        logger.exception('Failed to delete PrescribedMedicine %s', pm_rid)
-        except Exception:
-            logger.exception('Failed to cascade delete PrescribedMedicine entries')
-        
-        # Now delete the prescription itself
-        datastore_service = app.datastore()
-        table_service = datastore_service.table('Prescription')
-        deleted = []
-        for rid in row_ids:
-            try:
-                table_service.delete_row(rid)
-                deleted.append(rid)
-            except Exception:
-                logger.exception('Failed to delete prescription %s', rid)
-        
-        return make_response(jsonify({'status': 'success', 'data': {'deletedRowIds': deleted}}), 200)
+        if result['success']:
+            return make_response(jsonify({
+                'status': 'success',
+                'data': {'deletedRowIds': result['deletedPrescriptionRowIds']}
+            }), 200)
+        else:
+            return make_response(jsonify({
+                'status': 'failure',
+                'error': result.get('error', 'Failed to delete prescription')
+            }), 404 if 'not found' in result.get('error', '').lower() else 500)
     except Exception:
         logger.exception('Failed to delete Prescription by UUID')
         return make_response(jsonify({'status': 'failure', 'error': 'Failed to delete prescription'}), 500)
@@ -1386,10 +1486,56 @@ def generate_uuid():
     return str(uuid.uuid4())
 
 
+def check_authentication(request: Request, app):
+    """
+    Check if the request is authenticated via Catalyst Hosted Login.
+    Returns (is_authenticated: bool, error_response: dict or None)
+    """
+    # Skip authentication check in local development
+    # Catalyst Hosted Auth only works on deployed environment
+    if request.host and ('localhost' in request.host or '127.0.0.1' in request.host):
+        logger.info('Running on localhost - skipping authentication')
+        return True, None
+    
+    try:
+        # Get current authenticated user
+        user = app.authentication().get_current_user()
+        
+        if user and user.get('user_id'):
+            # User is authenticated
+            return True, None
+        else:
+            # No user found
+            error_response = make_response(
+                jsonify({
+                    'status': 'failure',
+                    'error': 'Unauthorized - Please login to access this resource'
+                }),
+                401
+            )
+            return False, error_response
+    except Exception as e:
+        logger.error(f"Authentication check failed: {e}")
+        error_response = make_response(
+            jsonify({
+                'status': 'failure',
+                'error': 'Unauthorized - Authentication required'
+            }),
+            401
+        )
+        return False, error_response
+
+
 def handler(request: Request):
     try:
         app = zcatalyst_sdk.initialize()
         logger = logging.getLogger()
+        
+        # Authentication temporarily disabled - uncomment when Hosted Login is fully configured
+        # Check authentication for all endpoints
+        # is_authenticated, auth_error = check_authentication(request, app)
+        # if not is_authenticated:
+        #     return auth_error
         
         # Patient endpoints
         if request.path == "/add" and request.method == 'POST':
